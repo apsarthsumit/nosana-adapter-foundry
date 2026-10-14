@@ -14,6 +14,9 @@ wallet/
 # every timestamped run generated locally is not.
 evidence/*.json
 !evidence/gate1-simulation.json
+# Live runs referenced from the README (produced by gate1:live / inference:live)
+!evidence/gate1-live-2026-10-14T15-11-16.246Z.json
+!evidence/inference-live-2026-10-14T16-02-31.279Z.json
 
 # Build and test artifacts
 work/

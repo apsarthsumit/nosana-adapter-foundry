@@ -14,12 +14,15 @@
     "website:check": "node scripts/validate-website.mjs",
     "gate1:simulate": "node src/cli/gate1.ts --simulate",
     "gate1:validate-job": "nosana job validate src/nosana/job-definitions/gate1-artifact-roundtrip.job.json",
-    "gate1:live-dry-run": "node src/cli/gate1-live-dry-run.ts"
+    "gate1:live-dry-run": "node src/cli/gate1-live-dry-run.ts",
+    "gate1:live": "node src/cli/gate1-live.ts --live",
+    "inference:live": "node src/cli/inference-live.ts --live"
   },
   "engines": {
     "node": ">=22.6"
   },
   "devDependencies": {
-    "@nosana/cli": "^1.0.133"
+    "@nosana/cli": "^1.0.133",
+    "@nosana/sdk": "0.4.83"
   }
 }

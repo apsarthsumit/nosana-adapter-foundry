@@ -1,0 +1,42 @@
+{
+  "kind": "nosana-inference-run",
+  "executionMode": "nosana-live",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "modelRevision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "nosanaJobId": "76j4XwpmdVa25xJ5zjzskjqitpLc54u4WyL53fSitRqx",
+  "market": "CA5pMpqkYFKtme7K31pNB1s62X2SdhEv1nN9RdxKCpuQ",
+  "node": "2cwhCqyvGEiC2UbZdhctrh2LGud2qyx62ED5DkKmJ1ot",
+  "chainState": "COMPLETED",
+  "resultReference": "QmNLei78zWmzUdbeRB3CiUfAizWUrbeeZh5K1rhAQKCh51",
+  "jobDefinitionSha256": "c47aba597e26840329216855f39240ad645d8d5e1c0953f68d246e774ffa7bf8",
+  "submittedAt": "2026-10-14T16:02:31.279Z",
+  "chainTimeStart": 1791994066,
+  "chainTimeEnd": 1791994186,
+  "costNos": 0.0108,
+  "containerReported": {
+    "gpu": "NVIDIA GeForce RTX 3090",
+    "resultBytes": 1350,
+    "resultSha256": "2d4012bf896b273acf23e4f11b77c9f739e8302588dd60c1e8fd1f70dfdd25ea",
+    "seconds": 16.1,
+    "torch": "2.4.0",
+    "transformers": "4.46.3"
+  },
+  "retrievedResultSha256": "2d4012bf896b273acf23e4f11b77c9f739e8302588dd60c1e8fd1f70dfdd25ea",
+  "retrievedResultBytes": 1350,
+  "transferIntegrityOk": true,
+  "claim": "Transfer integrity only: downloaded bytes match the digest the container reported. Output correctness and cross-hardware determinism are not claimed.",
+  "results": [
+    {
+      "completion": "A decentralized GPU network allows for the creation and management of virtual GPUs that operate independently and autonomously, facilitating more efficient resource utilization and reducing dependency on central servers.",
+      "prompt": "In one sentence, what is a decentralized GPU network?"
+    },
+    {
+      "completion": "Trust in any computing service can be compromised if the provider is not verified or trusted. Here are three potential risks associated with relying on an unverified compute provider:\n\n1. Data Security Risks: Untrusted providers may have access to sensitive data that could be exploited for malicious purposes. This includes personal information, financial data,",
+      "prompt": "List three risks of trusting an unverified compute provider."
+    },
+    {
+      "completion": "A SHA-256 digest is a cryptographic hash function that produces a fixed-size string (the hash) from any given input data. The purpose of the SHA-256 hash is to provide a unique identifier for each piece of data, which can be used in various applications such as digital signatures, authentication,",
+      "prompt": "What does a SHA-256 digest of an output file prove, and what does it not prove?"
+    }
+  ]
+}

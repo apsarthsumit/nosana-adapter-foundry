@@ -30,19 +30,25 @@ top of the same infrastructure.
 
 ## Current status
 
-**Prototype. Gate 1 has not passed. No live Nosana job has been submitted.**
+**Prototype. Gate 1 has passed once on live Nosana, and one small open model has run end to end. Nothing here is a sustained workload yet.**
 
-Everything in this repository runs in simulation mode. Simulation exercises
-the same generation, hashing, and evidence logic that a live run would use,
-entirely on the local machine, with no network call to Nosana and no cost.
-A simulation evidence record is permanently marked
-`"executionMode": "simulation"` and its schema makes `"gatePassed": true`
-structurally impossible to produce outside a live, independently verified
-run. See `src/evidence/job-evidence.ts`.
+Two live runs on the Nosana mainnet (2026-10-14), both submitted by code in this
+repository, each with a job ID that can be looked up on the Nosana explorer:
 
-**A passing simulation is not a passing Nosana gate.** Treat every claim in
-this repository as scoped to the local machine until `docs/nosana-cli-findings.md`
-and `docs/gate1-assumptions.md` say otherwise.
+| Run | Job ID | What it proves |
+|---|---|---|
+| Gate 1 artifact round trip (`npm run gate1:live`) | `7oVsEvTfEM99HhtJfEWwMpCSkzSrLJzEZVWd2w8aQe2B` | A 10 MiB artifact generated on a Nosana GPU node was downloaded and its SHA-256 matched the digest computed locally by this repo's own generator; the job's on-chain state was read independently via `@nosana/sdk` |
+| Real-model inference (`npm run inference:live`) | `76j4XwpmdVa25xJ5zjzskjqitpLc54u4WyL53fSitRqx` | `Qwen/Qwen2.5-0.5B-Instruct` (Apache-2.0, pinned revision) ran greedy decoding on an RTX 3090; the downloaded result file matched the digest the container reported |
+
+Scope of those claims: **transfer integrity and a real end-to-end execution
+only.** They do not show that model output is correct, and they do not claim
+identical output across different hardware. Total spend so far is a few
+hundredths of a credit; this is a working pipeline, not a production workload.
+
+A simulation evidence record is still permanently marked
+`"executionMode": "simulation"`, and the schema makes `"gatePassed": true`
+structurally impossible outside a live, independently verified run. See
+`src/evidence/job-evidence.ts`.
 
 | Component | Status |
 |---|---|
@@ -50,8 +56,10 @@ and `docs/gate1-assumptions.md` say otherwise.
 | Evidence schema (simulation vs. live) | Implemented, tested locally |
 | Secret linter for job definitions | Implemented, tested locally |
 | Job definition | Passes `nosana job validate` |
-| Live job submission | Not implemented (see blocker below) |
-| Artifact retrieval from a completed job | Not confirmed possible with the installed CLI |
+| Live job submission (Nosana deployments API) | Implemented, run live once per workload |
+| Artifact retrieval from a completed job | Works via an HTTP endpoint the job itself serves (not via the CLI; see below) |
+| Independent on-chain job state | Implemented via `@nosana/sdk`, run live |
+| Real-model inference adapter | One small model, run live once; no scale or reproducibility testing yet |
 
 ## What Gate 1 tests
 
@@ -105,7 +113,7 @@ CLI command a live run would use and the computed cost ceiling, without
 executing it. It requires market parameters as environment variables and
 still does not touch the network.
 
-## Confirmed Nosana CLI blocker
+## Nosana CLI blocker and how it was worked around
 
 Reading the installed `@nosana/cli` 1.0.133 source directly (see
 `docs/nosana-cli-findings.md` for exact file and line references) found that
@@ -115,19 +123,20 @@ only working artifact auto-detection path requires a job definition
 convention this project does not currently have a way to satisfy without a
 third-party pinning credential.
 
-**As of this CLI version, there is no confirmed, working mechanism to
-retrieve Gate 1's artifact back from a completed job.** This is the leading
-reason a live run has not been attempted. `docs/nosana-cli-findings.md` has
+**As of this CLI version, the CLI itself has no working artifact retrieval.**
+The live runs here bypass the CLI: the job's container serves its output
+directory over HTTP on an exposed port through a Nosana deployment, and
+`src/cli/gate1-live.ts` downloads and hashes the file. This is a working path,
+but it is not confirmed to be the mechanism Nosana recommends. `docs/nosana-cli-findings.md` has
 the full investigation, and `docs/dependency-risk.md` covers what `npm audit`
 reports for the packages a live submission would exercise.
 
 ## Roadmap
 
-1. **Supported live artifact round trip.** Resolve or work around the
-   artifact-egress blocker above, then run and verify a real Gate 1 job on
-   Nosana with independently fetched job state.
-2. **GPU inference adapter.** Deploy a minimal inference workload on Nosana
-   once artifact retrieval is confirmed working end to end.
+1. **Supported live artifact round trip.** Done once (job above), via the
+   endpoint workaround. Confirming Nosana's recommended egress mechanism is open.
+2. **GPU inference adapter.** One small model run live once. Repeated runs,
+   larger models, and reproducibility comparison across nodes are not done.
 3. **Evaluation and parameter-efficient fine-tuning adapter.** Add a small
    QLoRA or comparable fine-tuning job, plus a base-model-versus-adapter
    evaluation, on top of the same verified infrastructure.
@@ -198,12 +207,17 @@ credential, and never present simulation output as a live result.
 
 ## Limitations
 
-- No live Nosana job has been submitted. Every number, hash, and job state
-  in this repository comes from a local simulation.
-- Artifact retrieval from a completed job is not confirmed to work with the
-  installed CLI version. See the blocker section above.
-- The container image referenced by the job definition has not been built
-  or published from this repository.
+- Live evidence is two runs on one day. There is no sustained or repeated
+  usage yet, and no cross-node reproducibility testing.
+- The live jobs run Python inside stock public images
+  (`nosana/pytorch-jupyter`, `pytorch/pytorch`). The Node container image in
+  `containers/` and `gate1-artifact-roundtrip.job.json` are not what the live
+  runner submits, and that image has not been built or published.
+- Live jobs are confidential deployments, so the dashboard returns no job logs.
+  The runner reads a `log.txt` the job serves itself for diagnosis.
+- The first live inference attempts timed out (a 1.5B model's weights did not
+  finish downloading on the node); the 0.5B model is what succeeded. Those
+  attempts are not hidden: they appear in the git history of this work.
 - Dependency vulnerabilities exist in `@nosana/cli`'s own dependency tree.
   None are known to be reachable through the commands this project currently
   runs (`validate`, `--simulate`); several would become reachable the moment
