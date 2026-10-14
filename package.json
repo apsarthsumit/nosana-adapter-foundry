@@ -16,7 +16,8 @@
     "gate1:validate-job": "nosana job validate src/nosana/job-definitions/gate1-artifact-roundtrip.job.json",
     "gate1:live-dry-run": "node src/cli/gate1-live-dry-run.ts",
     "gate1:live": "node src/cli/gate1-live.ts --live",
-    "inference:live": "node src/cli/inference-live.ts --live"
+    "inference:live": "node src/cli/inference-live.ts --live",
+    "inference:schedule": "node src/cli/inference-schedule.ts"
   },
   "engines": {
     "node": ">=22.6"

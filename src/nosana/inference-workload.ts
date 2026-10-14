@@ -53,19 +53,29 @@ export function buildInferenceScript(): string {
     "open(out+'/result.json','wb').write(body)",
     "man={'resultSha256':hashlib.sha256(body).hexdigest(),'resultBytes':len(body),'gpu':torch.cuda.get_device_name(0),'torch':torch.__version__,'transformers':transformers.__version__,'seconds':round(time.time()-t0,1)}",
     "open(out+'/manifest.json','w').write(json.dumps(man,sort_keys=True))",
+    "print('RESULT_JSON '+json.dumps(json.loads(body)),flush=True)",
     "print(json.dumps(man,sort_keys=True),flush=True)",
   ].join("\n");
 }
 
-export function buildInferenceDeploymentBody(input: { name: string; market: string; timeoutMinutes: number }) {
+export interface InferenceBodyInput {
+  name: string;
+  market: string;
+  timeoutMinutes: number;
+  /** Cron expression: makes a repeating, non-confidential, exit-when-done deployment (no file server). */
+  schedule?: string;
+}
+
+export function buildInferenceDeploymentBody(input: InferenceBodyInput) {
+  const scheduled = input.schedule !== undefined;
   if (input.timeoutMinutes < MIN_CREDIT_TIMEOUT_MINUTES) throw new Error(`timeoutMinutes must be at least ${MIN_CREDIT_TIMEOUT_MINUTES} for credit-paid jobs`);
   return {
     name: input.name,
     market: input.market,
     replicas: 1,
     timeout: input.timeoutMinutes,
-    confidential: true,
-    strategy: "SIMPLE" as const,
+    confidential: !scheduled, // scheduled runs are public so their logs (result + digest) come back via the API
+    ...(scheduled ? { strategy: "SCHEDULED" as const, schedule: input.schedule } : { strategy: "SIMPLE" as const }),
     job_definition: {
       version: "0.1",
       type: "container",
@@ -77,8 +87,8 @@ export function buildInferenceDeploymentBody(input: { name: string; market: stri
           args: {
             image: INFERENCE_IMAGE,
             gpu: true,
-            cmd: ["bash", "-c", buildInferenceShell()],
-            expose: INFERENCE_PORT,
+            cmd: ["bash", "-c", buildInferenceShell({ serve: !scheduled })],
+            ...(scheduled ? {} : { expose: INFERENCE_PORT }),
           },
         },
       ],
@@ -91,11 +101,11 @@ export function buildInferenceDeploymentBody(input: { name: string; market: stri
  * the served directory, so a stalled or failing confidential job can still be
  * diagnosed over its exposed endpoint (the dashboard returns no logs for those).
  */
-export function buildInferenceShell(): string {
+export function buildInferenceShell(options: { serve?: boolean } = {}): string {
+  const serve = options.serve ?? true;
   return [
     `mkdir -p ${INFERENCE_OUT_DIR} && cd ${INFERENCE_OUT_DIR}`,
-    `python -m http.server ${INFERENCE_PORT} >/dev/null 2>&1 &`,
-    "exec >> log.txt 2>&1",
+    ...(serve ? [`python -m http.server ${INFERENCE_PORT} >/dev/null 2>&1 &`, "exec >> log.txt 2>&1"] : []),
     'echo "$(date -u +%T) start"; nvidia-smi -L; df -h / | tail -1',
     'echo "huggingface: $(curl -sI -m 10 https://huggingface.co | head -1)"',
     'echo "pypi: $(curl -sI -m 10 https://pypi.org | head -1)"',
@@ -104,7 +114,7 @@ export function buildInferenceShell(): string {
     'echo "$(date -u +%T) running model"',
     `python -u -c ${shellQuote(buildInferenceScript())} || echo "PYTHON_FAILED exit $?"`,
     'echo "$(date -u +%T) done"',
-    "wait",
+    ...(serve ? ["wait"] : []),
   ].join("\n");
 }
 

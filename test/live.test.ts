@@ -96,3 +96,17 @@ test("inference workload: script compiles, pins the model revision, and the job 
   assert.deepEqual(lintSecrets(body.job_definition), []);
   assert.throws(() => buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 5 }), /at least 50/);
 });
+
+test("scheduled inference body is a public, exit-when-done cron deployment; default stays confidential and served", () => {
+  const sched = buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 60, schedule: "0 6 * * *" });
+  assert.equal(sched.strategy, "SCHEDULED");
+  assert.equal((sched as any).schedule, "0 6 * * *");
+  assert.equal(sched.confidential, false);
+  assert.ok(!("expose" in sched.job_definition.ops[0].args));
+  assert.ok(!sched.job_definition.ops[0].args.cmd[1].includes("http.server"));
+  assert.deepEqual(lintSecrets(sched.job_definition), []);
+  const plain = buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 60 });
+  assert.equal(plain.strategy, "SIMPLE");
+  assert.equal(plain.confidential, true);
+  assert.equal(plain.job_definition.ops[0].args.expose, 8000);
+});
