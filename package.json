@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/satyawansinghinuk-stack/nosana-adapter-foundry.git"
+    "url": "https://github.com/apsarthsumit/nosana-adapter-foundry.git"
   },
   "private": true,
   "type": "module",
@@ -17,7 +17,9 @@
     "gate1:live-dry-run": "node src/cli/gate1-live-dry-run.ts",
     "gate1:live": "node src/cli/gate1-live.ts --live",
     "inference:live": "node src/cli/inference-live.ts --live",
-    "inference:schedule": "node src/cli/inference-schedule.ts"
+    "inference:schedule": "node src/cli/inference-schedule.ts",
+    "ocr:schedule": "node src/cli/ocr-schedule.ts",
+    "ocr:collect": "node src/cli/ocr-collect.ts"
   },
   "engines": {
     "node": ">=22.6"

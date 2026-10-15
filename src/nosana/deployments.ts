@@ -26,6 +26,22 @@ export interface DeploymentJob {
   market: string;
 }
 
+export interface JobOpState {
+  operationId: string;
+  status: string;
+  exitCode?: number | null;
+  logs?: Array<{ log: string }>;
+  errors?: unknown[];
+}
+
+export interface DeploymentJobDetail {
+  node?: string | null;
+  state?: number | string;
+  timeStart?: number;
+  timeEnd?: number;
+  jobResult?: { status?: string; opStates?: JobOpState[] } | null;
+}
+
 export class DeploymentsClient {
   private readonly apiKey: string;
   private readonly fetchImpl: FetchLike;
@@ -65,6 +81,10 @@ export class DeploymentsClient {
   }
   async jobs(id: string): Promise<DeploymentJob[]> {
     return (await this.request<{ jobs: DeploymentJob[] }>("GET", `/deployments/${id}/jobs`)).jobs;
+  }
+  /** One job of a deployment, including its operation states and (for non-confidential jobs) logs. */
+  job(id: string, jobId: string) {
+    return this.request<DeploymentJobDetail>("GET", `/deployments/${id}/jobs/${jobId}`);
   }
 
   /** Raw GET against a job's exposed endpoint; null on any non-200 (the node is still starting). */

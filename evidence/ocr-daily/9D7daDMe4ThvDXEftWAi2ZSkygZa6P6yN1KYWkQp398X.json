@@ -1,0 +1,318 @@
+{
+ "deployment": "9qsDvmfYDXu9Ne8L6ac9e5uWrALYhrAgNJF3QxzMPAF5",
+ "jobId": "9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X",
+ "node": "GzsmEa1goByh6tFrgzU6yBpFv8KGJHJhCwS87wV1ET3E",
+ "timeStart": 1792098352,
+ "timeEnd": 1792098746,
+ "wallSeconds": 394,
+ "jobStatus": "success",
+ "outcome": "result",
+ "infrastructureError": null,
+ "summary": {
+  "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.99.02",
+  "results": [
+   {
+    "avg_completion_tokens": 1331.3182,
+    "batch8_wall_s": 34.5,
+    "mean_f1_all": 0.8353,
+    "mean_f1_clean": 0.8382,
+    "mean_f1_degraded": 0.8324,
+    "model": "nanonets/Nanonets-OCR2-1.5B-exp",
+    "pages": 22,
+    "pages_per_hour": 2293,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9294,
+      "tokens": 740
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9704,
+      "tokens": 855
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.9235,
+      "tokens": 464
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.8217,
+      "tokens": 789
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.9173,
+      "tokens": 822
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8925,
+      "tokens": 1032
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.9779,
+      "tokens": 848
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.8274,
+      "tokens": 1553
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.8611,
+      "tokens": 868
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.9816,
+      "tokens": 376
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.9605,
+      "tokens": 771
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.974,
+      "tokens": 809
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9736,
+      "tokens": 799
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.97,
+      "tokens": 1158
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.0826,
+      "tokens": 4096
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.8304,
+      "tokens": 1879
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.8936,
+      "tokens": 942
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9088,
+      "tokens": 1287
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.8994,
+      "tokens": 1387
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.1358,
+      "tokens": 4096
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.801,
+      "tokens": 1618
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.8439,
+      "tokens": 2100
+     }
+    ],
+    "revision": "49a96f20ac641c7b3ad811914968ea8e1ace1760",
+    "runaway_pages": 2,
+    "server_start_s": 135
+   },
+   {
+    "avg_completion_tokens": 1200,
+    "batch8_wall_s": 59.9,
+    "mean_f1_all": 0.8486,
+    "mean_f1_clean": 0.8729,
+    "mean_f1_degraded": 0.8242,
+    "model": "nanonets/Nanonets-OCR2-3B",
+    "pages": 22,
+    "pages_per_hour": 1323,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9954,
+      "tokens": 653
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9758,
+      "tokens": 850
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.7467,
+      "tokens": 869
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.8114,
+      "tokens": 841
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.914,
+      "tokens": 830
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8679,
+      "tokens": 898
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.984,
+      "tokens": 826
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.7974,
+      "tokens": 1540
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.9597,
+      "tokens": 570
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.5544,
+      "tokens": 1166
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.7529,
+      "tokens": 1518
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.853,
+      "tokens": 1069
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9355,
+      "tokens": 957
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.9711,
+      "tokens": 1154
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.7481,
+      "tokens": 981
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.85,
+      "tokens": 1787
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.9018,
+      "tokens": 1055
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9164,
+      "tokens": 1241
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.8997,
+      "tokens": 1426
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.6494,
+      "tokens": 2351
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.764,
+      "tokens": 2005
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.8198,
+      "tokens": 1813
+     }
+    ],
+    "revision": "c3886ff00bb037ce7da24988c9eafaf1fe2bed72",
+    "runaway_pages": 0,
+    "server_start_s": 96
+   }
+  ],
+  "scoring": "word F1 vs PDF text layer (proxy)",
+  "sources": [
+   "https://arxiv.org/pdf/1706.03762v7",
+   "https://arxiv.org/pdf/2005.14165v4",
+   "https://arxiv.org/pdf/1512.03385v1"
+  ],
+  "total_seconds": 376,
+  "utc_start": "2026-10-15T21:05:58Z"
+ }
+}
