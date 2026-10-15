@@ -20,7 +20,7 @@ export async function buildSummary() {
     if (!name.endsWith(".json")) continue;
     const d = await readJson(path.join(evidenceDir, name));
     if (name.startsWith("gate1-live-") && d.executionMode === "nosana-live") {
-      gate1Live.push({ jobId: d.nosanaJobId, completedAt: d.completedAt, wallClockSeconds: Math.round(d.wallClockSeconds), bytes: d.artifactActualBytes, hashMatch: d.hashMatch, gatePassed: d.gatePassed });
+      gate1Live.push({ jobId: d.nosanaJobId, completedAt: d.completedAt, wallClockSeconds: Math.round(d.wallClockSeconds), bytes: d.artifactActualBytes, hashMatch: d.hashMatch, gatePassed: d.gatePassed, verifier: d.verifierVersion ?? null });
     }
     if (name.startsWith("inference-live-") && d.executionMode === "nosana-live") {
       inferenceLive.push({ jobId: d.nosanaJobId, model: d.model, gpu: d.containerReported?.gpu ?? null, submittedAt: d.submittedAt });

@@ -30,7 +30,7 @@ top of the same infrastructure.
 
 ## Current status
 
-**Prototype. Gate 1 has passed once on live Nosana, and one small open model has run end to end. Nothing here is a sustained workload yet.**
+**Prototype. Gate 1 has passed twice on live Nosana (the first run was verified by hand, the second by the runner in this repository), and one small open model has run end to end. Nothing here is a sustained workload yet.**
 
 Two live runs on the Nosana mainnet (2026-10-14), both submitted by code in this
 repository, each with a job ID that can be looked up on the Nosana explorer:

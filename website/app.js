@@ -38,7 +38,7 @@ export function evidenceRows(summary) {
   const day = (iso) => (iso ? iso.replace("T", " ").replace(/:\d\d(\.\d+)?Z$/, "") : "unknown");
   const rows = [];
   for (const g of summary.gate1Live ?? []) {
-    rows.push({ run: `Gate 1 round trip ${short(g.jobId)}`, when: day(g.completedAt), result: `${g.bytes.toLocaleString("en-US")} bytes, SHA-256 ${g.hashMatch ? "match" : "MISMATCH"}, ${g.wallClockSeconds} s` });
+    rows.push({ run: `Gate 1 round trip ${short(g.jobId)}`, when: day(g.completedAt), result: `${g.bytes.toLocaleString("en-US")} bytes, SHA-256 ${g.hashMatch ? "match" : "MISMATCH"}, ${g.wallClockSeconds} s${String(g.verifier ?? "").startsWith("manual") ? ", verified by hand" : ""}` });
   }
   for (const i of summary.inferenceLive ?? []) {
     rows.push({ run: `Inference ${short(i.jobId)}`, when: day(i.submittedAt), result: `${i.model} on ${gpuName(i.gpu)}` });

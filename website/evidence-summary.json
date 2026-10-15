@@ -7,7 +7,8 @@
    "wallClockSeconds": 49,
    "bytes": 10485760,
    "hashMatch": true,
-   "gatePassed": true
+   "gatePassed": true,
+   "verifier": "manual-live-verification@1.0.0"
   },
   {
    "jobId": "7oVsEvTfEM99HhtJfEWwMpCSkzSrLJzEZVWd2w8aQe2B",
@@ -15,7 +16,8 @@
    "wallClockSeconds": 35,
    "bytes": 10485760,
    "hashMatch": true,
-   "gatePassed": true
+   "gatePassed": true,
+   "verifier": "gate1-live-runner@1.0.0"
   }
  ],
  "inferenceLive": [
