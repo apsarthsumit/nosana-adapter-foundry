@@ -1,0 +1,47 @@
+{
+ "testCount": 54,
+ "gate1Live": [
+  {
+   "jobId": "4XeB5wfhEPicUG2ZusKDhmUupntAqrfN2t51b4GGoCgx",
+   "completedAt": "2026-10-14T15:05:30.000Z",
+   "wallClockSeconds": 49,
+   "bytes": 10485760,
+   "hashMatch": true,
+   "gatePassed": true
+  },
+  {
+   "jobId": "7oVsEvTfEM99HhtJfEWwMpCSkzSrLJzEZVWd2w8aQe2B",
+   "completedAt": "2026-10-14T15:11:51.000Z",
+   "wallClockSeconds": 35,
+   "bytes": 10485760,
+   "hashMatch": true,
+   "gatePassed": true
+  }
+ ],
+ "inferenceLive": [
+  {
+   "jobId": "76j4XwpmdVa25xJ5zjzskjqitpLc54u4WyL53fSitRqx",
+   "model": "Qwen/Qwen2.5-0.5B-Instruct",
+   "gpu": "NVIDIA GeForce RTX 3090",
+   "submittedAt": "2026-10-14T16:02:31.279Z"
+  }
+ ],
+ "ocrDaily": {
+  "total": 1,
+  "results": 1,
+  "benchmarkFailed": 0,
+  "noResult": 0,
+  "runs": [
+   {
+    "jobId": "9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X",
+    "startedAt": "2026-10-15T21:05:52Z",
+    "outcome": "result",
+    "wallSeconds": 394,
+    "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.99.02",
+    "f1Ocr15b": 0.8353,
+    "f1Ocr3b": 0.8486,
+    "infrastructureError": null
+   }
+  ]
+ }
+}

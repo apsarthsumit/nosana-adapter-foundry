@@ -29,6 +29,13 @@ a:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid #5
 @keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media(max-width:900px){.inspector{grid-template-columns:1fr}.inspector-input{border-right:0;border-bottom:1px solid #26392f}}
 @media(max-width:600px){.hero-status{grid-template-columns:1fr;gap:8px}.inspector{box-shadow:8px 10px 0 #d5dbd1}.inspector-input,.inspector-output{padding:22px}.preset{flex:1}.inspector-verdict{grid-template-columns:auto 1fr}.inspector-verdict small{grid-column:2}}
+/* Live evidence table */
+.evidence-table-wrap{overflow-x:auto;border:1px solid var(--line)}
+.evidence-table{width:100%;border-collapse:collapse;font:12px/1.5 var(--mono)}
+.evidence-table th,.evidence-table td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+.evidence-table th{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#66815a;background:rgba(152,242,61,.08)}
+.evidence-table tr:last-child td{border-bottom:0}
+@media(max-width:600px){.evidence-table th,.evidence-table td{padding:12px 10px;font-size:11px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
 /* Scroll reveal: content is fully visible by default. JS adds .reveal-pending

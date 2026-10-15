@@ -35,6 +35,7 @@
         <a href="#proof">Proof</a>
         <a href="#inspector">Inspector</a>
         <a href="#architecture">Architecture</a>
+        <a href="#evidence">Evidence</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#team">Team</a>
       </nav>
@@ -46,13 +47,13 @@
         <div class="hero-copy">
           <div class="status-row">
             <p class="eyebrow"><span></span> Nosana grant proposal</p>
-            <p class="status-chip">35/35 LOCAL TESTS PASSING</p>
+            <p class="status-chip">54 AUTOMATED TESTS PASSING</p>
           </div>
           <h1>AI workloads that<br /><em>prove what happened.</em></h1>
           <p class="lede">Package, run, retrieve, and independently verify AI workloads across decentralized GPU providers. No hand-waving. No simulation presented as production.</p>
           <aside class="hero-status" aria-label="Current prototype status">
-            <strong>PROTOTYPE STATUS</strong>
-            <span>Local verification is working. Live artifact retrieval remains pending until Nosana’s supported egress path for custom jobs is confirmed.</span>
+            <strong>PROTOTYPE STATUS: SELF-RUN</strong>
+            <span>Gate 1 has passed twice on live Nosana and a small open model has run end to end. A daily OCR benchmark now runs on a schedule. All usage so far is our own, not customer traffic, and nothing here is a production workload yet.</span>
           </aside>
           <div class="hero-actions">
             <a class="button primary" data-github data-live-label="Explore the prototype" href="#repository"><span class="link-label">Explore the prototype</span> <span class="link-arrow">↓</span></a>
@@ -75,7 +76,7 @@
             <p><span class="check">✓</span> job definition <strong>valid</strong></p>
             <p><span class="check">✓</span> safety boundary <strong>enforced</strong></p>
             <div class="rule"></div>
-            <p class="result"><span>35 tests passed</span><span>simulation ≠ live</span></p>
+            <p class="result"><span>54 tests passed</span><span>simulation ≠ live</span></p>
           </div>
         </div>
       </section>
@@ -109,10 +110,10 @@
 
       <section class="proof-strip" id="proof">
         <div class="shell proof-grid">
-          <div><strong>35/35</strong><span>automated tests passing</span></div>
-          <div><strong>10 MiB</strong><span>deterministic test artifact</span></div>
+          <div><strong>54</strong><span>automated tests passing</span></div>
+          <div><strong id="stat-gate1">2</strong><span>live Gate 1 round trips, hash match</span></div>
+          <div><strong id="stat-ocr">0</strong><span>daily OCR benchmark runs recorded</span></div>
           <div><strong>SHA-256</strong><span>independent integrity check</span></div>
-          <div><strong>0</strong><span>false live claims</span></div>
         </div>
       </section>
 
@@ -138,10 +139,25 @@
           <div class="connector">→</div>
           <article class="pipeline-step" data-reveal><span>02</span><div class="icon">GPU</div><h3>Execute</h3><p>Translate the workload into a Nosana-compatible GPU job.</p></article>
           <div class="connector">→</div>
-          <article class="pipeline-step pending" data-reveal><span>03</span><div class="icon">OUT</div><h3>Retrieve</h3><p>Recover the generated artifact through a supported egress path.</p></article>
+          <article class="pipeline-step" data-reveal><span>03</span><div class="icon">OUT</div><h3>Retrieve</h3><p>Download the result from an HTTP endpoint the job serves. Nosana’s recommended egress path is still unconfirmed.</p></article>
           <div class="connector">→</div>
-          <article class="pipeline-step pending" data-reveal><span>04</span><div class="icon">#</div><h3>Verify</h3><p>Compare bytes and emit a machine-readable evidence record.</p></article>
+          <article class="pipeline-step" data-reveal><span>04</span><div class="icon">#</div><h3>Verify</h3><p>Re-hash the downloaded bytes locally and emit a machine-readable evidence record.</p></article>
         </div>
+      </section>
+
+      <section class="section shell" id="evidence">
+        <div class="section-heading">
+          <p class="section-tag">LIVE EVIDENCE</p>
+          <h2>What has actually run on Nosana.</h2>
+          <p>Generated from the evidence files in the repository. Every job id can be looked up on the Nosana explorer. The OCR benchmark is our own recurring workload, scored by word overlap with each PDF’s text layer, which is a proxy for OCR quality.</p>
+        </div>
+        <div class="evidence-table-wrap">
+          <table class="evidence-table" aria-label="Live runs on Nosana">
+            <thead><tr><th>Run</th><th>When (UTC)</th><th>Result</th></tr></thead>
+            <tbody id="evidence-rows"><tr><td colspan="3">Loading evidence summary.</td></tr></tbody>
+          </table>
+        </div>
+        <noscript><p class="input-note">The evidence table needs JavaScript. The same records are in the evidence folder of the repository.</p></noscript>
       </section>
 
       <section class="section dark-panel">
@@ -158,7 +174,7 @@
           </div>
           <div class="disclosure">
             <strong>Current integration boundary</strong>
-            <p>The deterministic verification core is working locally. A live Gate 1 remains intentionally blocked until Nosana’s supported artifact-egress mechanism for custom jobs is confirmed and tested.</p>
+            <p>Retrieval works today through an HTTP endpoint served by the job itself. The Nosana CLI’s own artifact output flag is not implemented in version 1.0.133 (see docs/nosana-cli-findings.md). We have not confirmed that this endpoint is the mechanism Nosana recommends. The record above is a simulation rehearsal and can never pass the live gate.</p>
           </div>
         </div>
       </section>
@@ -170,9 +186,10 @@
         </div>
         <ol class="roadmap">
           <li class="complete" data-reveal><span>01</span><div><small>LOCAL FOUNDATION</small><h3>Deterministic verification core</h3><p>Generate, stream-hash, compare, validate evidence, and prevent simulated results from passing the live gate.</p></div><b>COMPLETE</b></li>
-          <li class="active" data-reveal><span>02</span><div><small>GRANT TARGET</small><h3>Live Nosana artifact round trip</h3><p>Confirm supported egress, execute on Nosana, retrieve, hash, and publish evidence.</p></div><b>IN PROGRESS</b></li>
-          <li data-reveal><span>03</span><div><small>GPU WORKLOADS</small><h3>Inference, evaluation, and fine-tuning</h3><p>Add bounded GPU adapters with explicit integrity and reproducibility checks.</p></div></li>
-          <li data-reveal><span>04</span><div><small>ECOSYSTEM</small><h3>Public developer release</h3><p>Ship stable tooling, examples, technical reports, and onboarding documentation.</p></div></li>
+          <li class="complete" data-reveal><span>02</span><div><small>LIVE ROUND TRIP</small><h3>Live Nosana artifact round trip</h3><p>Passed twice on 14 Oct 2026 with matching SHA-256 through a job-served endpoint. Confirming Nosana’s recommended egress path is still open.</p></div><b>DONE</b></li>
+          <li class="active" data-reveal><span>03</span><div><small>GPU WORKLOADS</small><h3>Inference adapter and daily OCR benchmark</h3><p>One small model has run live. A daily benchmark of two open OCR models runs on a schedule. Reproducibility across nodes is not yet measured.</p></div><b>IN PROGRESS</b></li>
+          <li data-reveal><span>04</span><div><small>FINE-TUNING</small><h3>Evaluation and parameter-efficient fine-tuning</h3><p>Add a bounded GPU fine-tuning job with a base-model versus adapter evaluation. Not started.</p></div></li>
+          <li data-reveal><span>05</span><div><small>ECOSYSTEM</small><h3>Public developer release</h3><p>Ship stable tooling, examples, technical reports, and onboarding documentation once the milestones above hold up under real use.</p></div></li>
         </ol>
       </section>
 
@@ -207,9 +224,9 @@
         <div class="cta-panel">
           <p class="section-tag">BUILD IN PUBLIC</p>
           <h2>Make decentralized AI compute measurable.</h2>
-          <p>The prototype is being prepared as an open-source reference implementation for the Nosana ecosystem.</p>
+          <p>The prototype is an open-source reference implementation for the Nosana ecosystem, released under Apache-2.0.</p>
           <div class="hero-actions">
-            <a class="button primary disabled" data-github data-live-label="View source" href="#repository" aria-disabled="true"><span class="link-label">Repository coming soon</span><span class="link-arrow"></span></a>
+            <a class="button primary" data-github data-live-label="View source" href="#repository"><span class="link-label">View source</span><span class="link-arrow"></span></a>
             <a class="button quiet" href="mailto:satyawansinghinuk@gmail.com">Contact the team <span>↗</span></a>
           </div>
         </div>

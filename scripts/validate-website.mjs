@@ -1,5 +1,6 @@
 import { readFile, access } from "node:fs/promises";
 import path from "node:path";
+import { buildSummary } from "./build-website-data.mjs";
 
 const root = process.cwd();
 const website = path.join(root, "website");
@@ -32,7 +33,17 @@ for (const [name, pattern] of [
 }
 
 if (!html.includes('id="team"')) throw new Error("team section is missing");
-if (!html.includes("Local verification is working")) throw new Error("prototype status disclosure is missing");
+if (!html.includes("All usage so far is our own, not customer traffic")) throw new Error("self-run usage disclosure is missing");
+
+// Numbers on the page must come from the repository, not from memory.
+const summary = await buildSummary();
+const committed = await readFile(path.join(website, "evidence-summary.json"), "utf8").catch(() => "");
+if (committed !== JSON.stringify(summary, null, 1) + "\n") throw new Error("website/evidence-summary.json is stale: run `npm run website:data`");
+for (const needle of [`${summary.testCount} AUTOMATED TESTS PASSING`, `<strong>${summary.testCount}</strong>`, `${summary.testCount} tests passed`]) {
+  if (!html.includes(needle)) throw new Error(`website test count is out of date, expected: ${needle}`);
+}
+if (/35\/35|35 tests/.test(html)) throw new Error("website still carries the old 35-test claim");
+if (/PENDING|coming soon/i.test(html.replace(/reveal-pending/g, ""))) throw new Error("website still says something is pending or coming soon");
 if (!contents.get("app.js").includes("nosanaJobExecuted: false")) throw new Error("browser evidence safety flag is missing");
 if (!contents.get("premium.css").includes("prefers-reduced-motion:reduce")) throw new Error("reduced-motion handling is missing");
 

@@ -10,7 +10,7 @@ before opening a pull request, so your change lands in the right place.
 Requirements: Node.js 22.6 or newer.
 
 ```bash
-git clone https://github.com/satyawansinghinuk-stack/nosana-adapter-foundry.git
+git clone https://github.com/apsarthsumit/nosana-adapter-foundry.git
 cd nosana-adapter-foundry
 npm install
 npm test

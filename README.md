@@ -1,6 +1,6 @@
 # Nosana Adapter Foundry
 
-![CI](https://github.com/satyawansinghinuk-stack/nosana-adapter-foundry/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/apsarthsumit/nosana-adapter-foundry/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)
 
 Project website: https://nosana-adapter-foundry.vercel.app/
@@ -60,6 +60,7 @@ structurally impossible outside a live, independently verified run. See
 | Artifact retrieval from a completed job | Works via an HTTP endpoint the job itself serves (not via the CLI; see below) |
 | Independent on-chain job state | Implemented via `@nosana/sdk`, run live |
 | Real-model inference adapter | One small model, run live once; no scale or reproducibility testing yet |
+| Daily OCR benchmark (`containers/ocr-benchmark/`) | Pinned inputs; one manual live run on 2026-10-15, then a daily schedule; results collected into `evidence/ocr-daily/` |
 
 ## What Gate 1 tests
 
@@ -77,7 +78,7 @@ flowchart LR
     B --> C[Hash artifact locally]
     C --> D{Execution mode}
     D -->|simulation| E[Copy locally, re-hash]
-    D -->|live, not yet implemented| F[Submit to Nosana, wait, retrieve]
+    D -->|live| F[Submit to Nosana, wait, retrieve]
     E --> G[Evidence record]
     F --> G[Evidence record]
     G --> H{gatePassed}
@@ -94,7 +95,7 @@ known artifact goes in and the same artifact comes out.
 Requires Node.js 22.6 or newer.
 
 ```bash
-git clone https://github.com/satyawansinghinuk-stack/nosana-adapter-foundry.git
+git clone https://github.com/apsarthsumit/nosana-adapter-foundry.git
 cd nosana-adapter-foundry
 npm install
 npm test
@@ -130,6 +131,30 @@ directory over HTTP on an exposed port through a Nosana deployment, and
 but it is not confirmed to be the mechanism Nosana recommends. `docs/nosana-cli-findings.md` has
 the full investigation, and `docs/dependency-risk.md` covers what `npm audit`
 reports for the packages a live submission would exercise.
+
+## Daily OCR benchmark (our own recurring workload)
+
+Nosana's grants team asked for ongoing GPU usage, so this repository now runs one
+recurring workload of its own: a document-OCR benchmark of two open models
+(`Nanonets-OCR2-1.5B-exp` and `Nanonets-OCR2-3B`, pinned to Hugging Face commits)
+served with vLLM on an RTX 3090 node, scored on 22 pinned pages from three
+versioned arXiv PDFs (half degraded). Each run prints one `OCR_DAILY_RESULT` line;
+`npm run ocr:collect -- --deployment <id>` turns finished jobs into
+`evidence/ocr-daily/<jobId>.json`, recording node-side failures (no node, image
+pull, CUDA fault) separately from benchmark failures.
+
+What this is not: **it is not customer traffic**, and the score is word-level F1
+against each PDF's own text layer, a proxy for OCR quality rather than a
+ground-truth benchmark. A run is about 0.1 GPU-hours (about 0.02 credits), so this
+is a small workload. The first manual run (job `9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X`,
+394 s) scored 0.835 (1.5B) and 0.849 (3B) mean F1.
+
+```bash
+GATE1_LIVE=1 npm run ocr:schedule -- --live --cron "10 5 * * *"   # spends credits daily until stopped
+GATE1_LIVE=1 npm run ocr:schedule -- --stop <deploymentId>
+npm run ocr:collect -- --deployment <deploymentId>
+npm run website:data                                               # refresh website/evidence-summary.json
+```
 
 ## Roadmap
 

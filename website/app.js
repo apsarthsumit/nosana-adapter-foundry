@@ -1,4 +1,4 @@
-const GITHUB_URL = "https://github.com/satyawansinghinuk-stack/nosana-adapter-foundry";
+const GITHUB_URL = "https://github.com/apsarthsumit/nosana-adapter-foundry";
 
 // --- Pure logic -------------------------------------------------------
 // Exported so the same functions this page runs in the browser can be
@@ -28,6 +28,31 @@ export function buildEvidence({ digest, byteLength }) {
   return evidence;
 }
 
+/**
+ * Turns website/evidence-summary.json into display rows. Pure so it can be tested from Node.
+ * Each row: { run, when, result }. Strings only; the page renders them with textContent.
+ */
+export function evidenceRows(summary) {
+  const short = (id) => `${id.slice(0, 8)}...`;
+  const gpuName = (gpu) => (gpu ? gpu.split(",")[0] : "unknown GPU");
+  const day = (iso) => (iso ? iso.replace("T", " ").replace(/:\d\d(\.\d+)?Z$/, "") : "unknown");
+  const rows = [];
+  for (const g of summary.gate1Live ?? []) {
+    rows.push({ run: `Gate 1 round trip ${short(g.jobId)}`, when: day(g.completedAt), result: `${g.bytes.toLocaleString("en-US")} bytes, SHA-256 ${g.hashMatch ? "match" : "MISMATCH"}, ${g.wallClockSeconds} s` });
+  }
+  for (const i of summary.inferenceLive ?? []) {
+    rows.push({ run: `Inference ${short(i.jobId)}`, when: day(i.submittedAt), result: `${i.model} on ${gpuName(i.gpu)}` });
+  }
+  for (const r of summary.ocrDaily?.runs ?? []) {
+    const detail = r.outcome === "result"
+      ? `OCR 1.5B F1 ${r.f1Ocr15b}, 3B F1 ${r.f1Ocr3b}, ${r.wallSeconds} s on ${gpuName(r.gpu)}`
+      : r.outcome === "failed" ? "benchmark failed (see evidence file)"
+      : `no result: ${r.infrastructureError ?? "job not finished or no logs returned"}`;
+    rows.push({ run: `OCR benchmark ${short(r.jobId)}`, when: day(r.startedAt), result: detail });
+  }
+  return rows;
+}
+
 // --- Browser wiring -----------------------------------------------------
 // Everything below only runs when a DOM is present, so this file stays
 // importable from Node for the pure-logic test above.
@@ -36,6 +61,32 @@ if (typeof document !== "undefined") {
   activateGithubLinks();
   wireInspector();
   wireScrollReveal();
+  renderEvidence();
+}
+
+async function renderEvidence() {
+  const body = document.querySelector("#evidence-rows");
+  if (!body) return;
+  try {
+    const res = await fetch("evidence-summary.json", { cache: "no-cache" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const summary = await res.json();
+    const gate1 = document.querySelector("#stat-gate1");
+    const ocr = document.querySelector("#stat-ocr");
+    if (gate1) gate1.textContent = String(summary.gate1Live.filter((g) => g.hashMatch).length);
+    if (ocr) ocr.textContent = String(summary.ocrDaily.total);
+    body.replaceChildren(...evidenceRows(summary).map((row) => {
+      const tr = document.createElement("tr");
+      for (const text of [row.run, row.when, row.result]) {
+        const td = document.createElement("td");
+        td.textContent = text;
+        tr.append(td);
+      }
+      return tr;
+    }));
+  } catch {
+    body.replaceChildren(Object.assign(document.createElement("tr"), { innerHTML: "<td colspan='3'>Evidence summary unavailable. The records are in the evidence folder of the repository.</td>" }));
+  }
 }
 
 function activateGithubLinks() {
