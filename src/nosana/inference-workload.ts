@@ -16,6 +16,7 @@ export const INFERENCE_PROMPTS = [
   "What does a SHA-256 digest of an output file prove, and what does it not prove?",
 ];
 export const INFERENCE_MAX_NEW_TOKENS = 64;
+export const INFERENCE_FAILURE_MARKER = "INFERENCE_FAILED";
 const MIN_CREDIT_TIMEOUT_MINUTES = 50;
 
 export function buildInferenceScript(): string {
@@ -67,6 +68,7 @@ export interface InferenceBodyInput {
 }
 
 export function buildInferenceDeploymentBody(input: InferenceBodyInput) {
+  if (!Number.isSafeInteger(input.timeoutMinutes)) throw new Error("timeoutMinutes must be a finite integer");
   const scheduled = input.schedule !== undefined;
   if (input.timeoutMinutes < MIN_CREDIT_TIMEOUT_MINUTES) throw new Error(`timeoutMinutes must be at least ${MIN_CREDIT_TIMEOUT_MINUTES} for credit-paid jobs`);
   return {
@@ -106,7 +108,7 @@ export function buildInferenceShell(options: { serve?: boolean; outputDir?: stri
   const outputDir = options.outputDir ?? INFERENCE_OUT_DIR;
   return [
     "set -euo pipefail",
-    'trap \'rc=$?; trap - EXIT; if [ "$rc" -ne 0 ]; then echo "INFERENCE_FAILED exit $rc"; fi; if [ -n "${server_pid:-}" ]; then kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true; fi; exit "$rc"\' EXIT',
+    `trap 'rc=$?; trap - EXIT; if [ "$rc" -ne 0 ]; then echo "${INFERENCE_FAILURE_MARKER} exit $rc"; fi; if [ -n "\${server_pid:-}" ]; then kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true; fi; exit "$rc"' EXIT`,
     `mkdir -p ${shellQuote(outputDir)} && cd ${shellQuote(outputDir)}`,
     ...(serve ? [`python3 -m http.server ${INFERENCE_PORT} >/dev/null 2>&1 &`, "server_pid=$!", "exec >> log.txt 2>&1"] : []),
     'echo "$(date -u +%T) start"; nvidia-smi -L; df -h / | tail -1',

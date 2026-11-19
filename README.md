@@ -244,8 +244,9 @@ credential, and never present simulation output as a live result.
   (`nosana/pytorch-jupyter`, `pytorch/pytorch`). The Node container image in
   `containers/` and `gate1-artifact-roundtrip.job.json` are not what the live
   runner submits, and that image has not been built or published.
-- Live jobs are confidential deployments, so the dashboard returns no job logs.
-  The runner reads a `log.txt` the job serves itself for diagnosis.
+- Artifact and one-off inference deployments are confidential. Their runners
+  read job-served files for diagnosis. OCR and scheduled inference deployments
+  are public so their result logs can be collected.
 - The first live inference attempts timed out (a 1.5B model's weights did not
   finish downloading on the node); the 0.5B model is what succeeded. Those
   attempts are not hidden: they appear in the git history of this work.

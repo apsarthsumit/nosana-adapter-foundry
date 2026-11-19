@@ -4,6 +4,8 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { validateInferenceArtifacts } from "../src/nosana/inference-result.ts";
 import { writeDeterministicArtifact } from "../src/generator/deterministic-artifact.ts";
 import { sha256File } from "../src/hashing/sha256.ts";
 import { lintSecrets } from "../src/security/secret-lint.ts";
@@ -39,11 +41,13 @@ test("deployment body passes secret lint, embeds the expected digest and rejects
   assert.ok(body.job_definition.ops[0].args.cmd[3].includes(HASH));
   assert.equal(body.job_definition.ops[0].args.gpu, true);
   assert.throws(() => buildDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 10, expectedSha256: HASH }), /at least 50/);
+  for (const timeoutMinutes of [NaN, Infinity, 60.5]) assert.throws(() => buildDeploymentBody({ name: "n", market: MARKET, timeoutMinutes, expectedSha256: HASH }), /finite integer/);
 });
 
 test("DeploymentsClient sends the bearer key, and surfaces HTTP errors without leaking the key", async () => {
   const seen: Array<{ url: string; auth?: string }> = [];
   const fakeFetch: FetchLike = async (url, init) => {
+    assert.ok(init?.signal instanceof AbortSignal);
     seen.push({ url, auth: init?.headers?.Authorization });
     return { ok: !url.endsWith("/bad"), status: url.endsWith("/bad") ? 401 : 200, json: async () => ({ jobs: [] }), arrayBuffer: async () => new ArrayBuffer(0) };
   };
@@ -53,6 +57,22 @@ test("DeploymentsClient sends the bearer key, and surfaces HTTP errors without l
   assert.equal(seen[0].auth, "Bearer secret-key-value");
   await assert.rejects(() => (client as any).request("GET", "/bad"), (e: Error) => /401/.test(e.message) && !e.message.includes("secret-key-value"));
   assert.throws(() => new DeploymentsClient("", fakeFetch), /NOSANA_API_KEY/);
+  await client.fetchEndpointFile("https://node.test", "/result.json");
+  assert.equal(seen.at(-1)?.auth, undefined);
+});
+
+test("scheduled start failures attempt cleanup and identify a deployment when cleanup also fails", async () => {
+  for (const [startFails, stopFails] of [[false, false], [true, false], [true, true]]) {
+    const calls: string[] = [];
+    const client = new DeploymentsClient("test-key", async (url) => {
+      calls.push(url);
+      const ok = !(url.endsWith("/start") && startFails) && !(url.endsWith("/stop") && stopFails);
+      return { ok, status: ok ? 200 : 503, json: async () => url.endsWith("/create") ? { id: "D1" } : { status: "ok" }, arrayBuffer: async () => new ArrayBuffer(0) };
+    }, "https://example.test");
+    if (startFails) await assert.rejects(client.createAndStart({}), stopFails ? /automatic stop failed.*D1/ : /503/);
+    else assert.equal((await client.createAndStart({})).deployment.id, "D1");
+    assert.equal(calls.some((url) => url.endsWith("/stop")), startFails);
+  }
 });
 
 const chain: ChainJob = { state: "COMPLETED", market: MARKET, node: NODE, ipfsResult: CID, timeStart: 1791990281, timeEnd: 1791990330, priceRaw: 90 };
@@ -85,7 +105,7 @@ test("a chain state other than COMPLETED never passes", () => {
   assert.equal(e.gatePassed, false);
 });
 
-import { buildInferenceDeploymentBody, buildInferenceScript, buildInferenceShell, INFERENCE_MODEL_REVISION } from "../src/nosana/inference-workload.ts";
+import { buildInferenceDeploymentBody, buildInferenceScript, buildInferenceShell, INFERENCE_FAILURE_MARKER, INFERENCE_MODEL_REVISION } from "../src/nosana/inference-workload.ts";
 
 test("inference workload: script compiles, pins the model revision, and the job passes secret lint", () => {
   const script = buildInferenceScript();
@@ -95,6 +115,7 @@ test("inference workload: script compiles, pins the model revision, and the job 
   const body = buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 60 });
   assert.deepEqual(lintSecrets(body.job_definition), []);
   assert.throws(() => buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 5 }), /at least 50/);
+  for (const timeoutMinutes of [NaN, Infinity, 60.5]) assert.throws(() => buildInferenceDeploymentBody({ name: "n", market: MARKET, timeoutMinutes }), /finite integer/);
 });
 
 test("scheduled inference body is a public, exit-when-done cron deployment; default stays confidential and served", () => {
@@ -118,8 +139,27 @@ test("scheduled inference preserves dependency and model failure exit codes", as
       const stubs = `python3(){ if [ "$1" = "-m" ]; then return ${pipCode}; fi; echo MODEL_RAN; return ${modelCode}; }; curl(){ return 0; }; nvidia-smi(){ return 0; };\n`;
       const run = spawnSync("bash", ["-c", stubs + buildInferenceShell({ serve: false, outputDir: dir })], { encoding: "utf8", timeout: 5000 });
       assert.equal(run.status, expected, run.stderr);
-      if (expected) assert.match(run.stdout, /INFERENCE_FAILED/);
+      if (expected) assert.ok(run.stdout.includes(INFERENCE_FAILURE_MARKER));
       if (pipCode) assert.doesNotMatch(run.stdout, /MODEL_RAN/);
     }
   } finally { await rm(dir, { recursive: true, force: true }); }
+});
+
+test("inference artifacts reject wrong model identity, missing prompts and malformed runtime metadata", () => {
+  const saved = JSON.parse(readFileSync(new URL("../evidence/inference-live-2026-10-14T16-02-31.279Z.json", import.meta.url), "utf8"));
+  const fixture = () => ({ manifest: structuredClone(saved.containerReported), result: { model: saved.model, revision: saved.modelRevision, decoding: "greedy", results: structuredClone(saved.results) } });
+  const good = fixture();
+  assert.doesNotThrow(() => validateInferenceArtifacts(good.manifest, good.result));
+  const changes = [
+    (f: any) => { f.result.model = "different-model"; },
+    (f: any) => { f.result.revision = "0".repeat(40); },
+    (f: any) => { f.result.results.pop(); },
+    (f: any) => { f.result.results[0].prompt = "different-prompt"; },
+    (f: any) => { f.result.results[0].completion = ""; },
+    (f: any) => { f.manifest.resultSha256 = "invalid"; },
+    (f: any) => { f.manifest.resultBytes = -1; },
+    (f: any) => { f.manifest.seconds = Infinity; },
+    (f: any) => { f.manifest.gpu = "mock GPU"; },
+  ];
+  for (const change of changes) { const f = fixture(); change(f); assert.throws(() => validateInferenceArtifacts(f.manifest, f.result)); }
 });

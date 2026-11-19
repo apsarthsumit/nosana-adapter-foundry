@@ -3,7 +3,7 @@
 // 2026-10-14 (create, start, stop, get, jobs, jobs/{job}, credits/balance).
 // `fetch` is injected so tests never touch the network.
 
-export type FetchLike = (url: string, init?: { method?: string; headers?: Record<string, string>; body?: string }) => Promise<{
+export type FetchLike = (url: string, init?: { method?: string; headers?: Record<string, string>; body?: string; signal?: AbortSignal }) => Promise<{
   ok: boolean;
   status: number;
   json(): Promise<unknown>;
@@ -57,6 +57,7 @@ export class DeploymentsClient {
   private async request<T>(method: string, path: string, body?: unknown): Promise<T> {
     const res = await this.fetchImpl(`${this.base}${path}`, {
       method,
+      signal: AbortSignal.timeout(30_000),
       headers: { Authorization: `Bearer ${this.apiKey}`, ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
@@ -69,6 +70,17 @@ export class DeploymentsClient {
   }
   create(body: unknown) {
     return this.request<Deployment>("POST", "/deployments/create", body);
+  }
+  /** Stop an ambiguous start attempt before returning its failure to a scheduler. */
+  async createAndStart(body: unknown) {
+    const deployment = await this.create(body);
+    try {
+      return { deployment, started: await this.start(deployment.id) };
+    } catch (error) {
+      try { await this.stop(deployment.id); }
+      catch { throw new Error(`Start failed and automatic stop failed for deployment ${deployment.id}; check it in Nosana Deploy`, { cause: error }); }
+      throw error;
+    }
   }
   start(id: string) {
     return this.request<{ status: string }>("POST", `/deployments/${id}/start`);
@@ -89,7 +101,7 @@ export class DeploymentsClient {
 
   /** Raw GET against a job's exposed endpoint; null on any non-200 (the node is still starting). */
   async fetchEndpointFile(endpointUrl: string, path: string): Promise<Uint8Array | null> {
-    const res = await this.fetchImpl(`${endpointUrl.replace(/\/$/, "")}${path}`);
+    const res = await this.fetchImpl(`${endpointUrl.replace(/\/$/, "")}${path}`, { signal: AbortSignal.timeout(30_000) });
     if (!res.ok) return null;
     return new Uint8Array(await res.arrayBuffer());
   }

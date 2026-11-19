@@ -8,7 +8,8 @@ import { Client } from "@nosana/sdk";
 import { canonicalJsonSha256, sha256File } from "../hashing/sha256.ts";
 import { lintSecrets } from "../security/secret-lint.ts";
 import { DeploymentsClient, type FetchLike } from "../nosana/deployments.ts";
-import { buildInferenceDeploymentBody, INFERENCE_MODEL, INFERENCE_MODEL_REVISION, type InferenceManifest } from "../nosana/inference-workload.ts";
+import { buildInferenceDeploymentBody, INFERENCE_FAILURE_MARKER, INFERENCE_MODEL, INFERENCE_MODEL_REVISION, type InferenceManifest } from "../nosana/inference-workload.ts";
+import { validateInferenceArtifacts } from "../nosana/inference-result.ts";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 if (!process.argv.includes("--live") || process.env.GATE1_LIVE !== "1") throw new Error("refusing to spend Nosana credits: pass --live and set GATE1_LIVE=1");
@@ -54,12 +55,14 @@ async function main(): Promise<void> {
         deadline = Date.now() + waitSeconds * 1000;
       }
       manifestBytes = await api.fetchEndpointFile(url, "/manifest.json").catch(() => null);
-      if (!manifestBytes && /PIP_FAILED|PYTHON_FAILED/.test(log)) throw new Error("container reported a failure (see log above)");
+      if (log.includes(INFERENCE_FAILURE_MARKER) || /PIP_FAILED|PYTHON_FAILED/.test(log)) throw new Error("container reported a failure (see log above)");
     }
     if (!manifestBytes) throw new Error(`no manifest served within ${waitSeconds}s (container log lines seen: ${seenLog.split("\n").length})`);
     const manifest = JSON.parse(new TextDecoder().decode(manifestBytes)) as InferenceManifest;
     const resultBytes = await api.fetchEndpointFile(url, "/result.json");
     if (!resultBytes) throw new Error("result.json not retrievable");
+    const result = JSON.parse(new TextDecoder().decode(resultBytes));
+    validateInferenceArtifacts(manifest, result);
     const resultPath = resolve(dir, "result.json");
     await writeFile(resultPath, resultBytes);
     const localSha = await sha256File(resultPath);
@@ -78,7 +81,6 @@ async function main(): Promise<void> {
     if (chain?.state !== "COMPLETED") throw new Error(`job not COMPLETED on-chain (state ${chain?.state})`);
 
     const integrityOk = localSha === manifest.resultSha256 && resultBytes.length === manifest.resultBytes;
-    const result = JSON.parse(new TextDecoder().decode(resultBytes));
     const record = {
       kind: "nosana-inference-run",
       executionMode: "nosana-live",

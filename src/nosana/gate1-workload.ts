@@ -59,6 +59,7 @@ export interface DeploymentBodyInput {
 }
 
 export function buildDeploymentBody(input: DeploymentBodyInput) {
+  if (!Number.isSafeInteger(input.timeoutMinutes)) throw new Error("timeoutMinutes must be a finite integer");
   if (input.timeoutMinutes < MIN_CREDIT_TIMEOUT_MINUTES) {
     throw new Error(`timeoutMinutes must be at least ${MIN_CREDIT_TIMEOUT_MINUTES} for credit-paid jobs`);
   }

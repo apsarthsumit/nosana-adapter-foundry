@@ -27,7 +27,7 @@ if (stopId) {
   const body = buildInferenceDeploymentBody({ name: `inference-scheduled-${Date.now()}`, market, timeoutMinutes: 60, schedule: cron });
   const findings = lintSecrets(body.job_definition);
   if (findings.length) throw new Error(`secret lint failed: ${JSON.stringify(findings)}`);
-  const dep = await api.create(body);
+  const { deployment: dep, started } = await api.createAndStart(body);
   console.log(JSON.stringify({ created: dep.id, status: dep.status, cron }));
-  console.log(JSON.stringify(await api.start(dep.id)));
+  console.log(JSON.stringify(started));
 }
