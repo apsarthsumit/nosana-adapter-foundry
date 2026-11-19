@@ -25,7 +25,7 @@ top of the same infrastructure.
 
 ## Current status
 
-**Prototype. MEASURED — checked-in evidence records two Gate 1 round trips, one small-model inference result, and eight OCR attempts from October 15–22: four results and four failures. Sources: `evidence/`, `evidence/ocr-daily/`, and `evidence/ocr-sources/`. This is self-run research, without demonstrated customer demand.**
+**Prototype. MEASURED: checked-in evidence records two Gate 1 round trips, one small-model inference result, and eight OCR attempts from October 15–22: four results and four failures. Sources: `evidence/`, `evidence/ocr-daily/`, and `evidence/ocr-sources/`. This is self-run research, without demonstrated customer demand.**
 
 Two live runs on the Nosana mainnet (2026-10-14), both submitted by code in this
 repository, each with a job ID that can be looked up on the Nosana explorer:
@@ -55,7 +55,7 @@ structurally impossible outside a live, independently verified run. See
 | Artifact retrieval before stopping the job | Works via an HTTP endpoint the job itself serves; persistence after shutdown remains unverified |
 | Independent on-chain job state | Implemented via `@nosana/sdk`, run live |
 | Real-model inference adapter | One small model, run live once; no scale or reproducibility testing yet |
-| Daily OCR benchmark (`containers/ocr-benchmark/`) | MEASURED — one manual result and seven scheduled attempts, including three results and four failures; see `evidence/ocr-daily/`. The last dashboard check on November 18 showed a stopped/error schedule and insufficient credits. |
+| Daily OCR benchmark (`containers/ocr-benchmark/`) | MEASURED: one manual result and seven scheduled attempts, including three results and four failures; see `evidence/ocr-daily/`. The last dashboard check on November 18 showed a stopped/error schedule and insufficient credits. |
 
 ## What Gate 1 tests
 
@@ -131,8 +131,8 @@ reports for the packages a live submission would exercise.
 
 ## Daily OCR benchmark (our own recurring workload)
 
-Nosana's grants team asked for ongoing GPU usage, so this repository now runs one
-historical recurring workload of its own: a document-OCR benchmark of two open models
+Nosana's grants team said it prioritises ongoing GPU workloads. This repository
+records a historical recurring workload of its own: a document-OCR benchmark of two open models
 (`Nanonets-OCR2-1.5B-exp` and `Nanonets-OCR2-3B`, pinned to Hugging Face commits)
 served with vLLM on an RTX 3090 node, scored on 22 pinned pages from three
 versioned arXiv PDFs (half degraded). Each run prints one `OCR_DAILY_RESULT` line;
@@ -142,11 +142,11 @@ pull, CUDA fault) separately from benchmark failures.
 
 What this is not: **it is not customer traffic**, and the score is word-level F1
 against each PDF's own text layer, a proxy for OCR quality rather than a
-ground-truth benchmark. MEASURED — recorded elapsed durations vary substantially,
+ground-truth benchmark. MEASURED: recorded elapsed durations vary substantially,
 including failed attempts; see `evidence/ocr-daily/`. The first manual run (job `9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X`,
 394 s) scored 0.835 (1.5B) and 0.849 (3B) mean F1.
 
-MEASURED — `evidence/ocr-sources/` preserves the extracted public explorer logs,
+MEASURED: `evidence/ocr-sources/` preserves the extracted public explorer logs,
 source URLs, snapshot hashes, and displayed timing precision for all eight
 attempts. `node scripts/import-ocr-history.mjs --check` verifies their deterministic
 conversion into the normalized evidence records. These are recovered historical
@@ -237,7 +237,7 @@ credential, and never present simulation output as a live result.
 
 ## Limitations
 
-- MEASURED — the checked-in OCR history spans eight days with four successes
+- MEASURED: the checked-in OCR history spans eight days with four successes
   and four failures (`evidence/ocr-daily/`). There is no demonstrated sustained
   customer workload or controlled cross-node reproducibility study.
 - The live jobs run Python inside stock public images
@@ -250,7 +250,7 @@ credential, and never present simulation output as a live result.
 - The first live inference attempts timed out (a 1.5B model's weights did not
   finish downloading on the node); the 0.5B model is what succeeded. Those
   attempts are not hidden: they appear in the git history of this work.
-- MEASURED — dependency audit findings are recorded in `docs/dependency-risk.md`;
+- MEASURED: dependency audit findings are recorded in `docs/dependency-risk.md`;
   that historical reachability analysis does not establish safety of current
   live paths. Updating and reviewing the CLI/SDK dependencies remains open.
 - Runtime dependencies and container tags are not fully pinned. Model revisions

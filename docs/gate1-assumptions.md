@@ -40,6 +40,15 @@
 
 ## Open integration questions
 
+MEASURED: The runner Gate 1 record
+`evidence/gate1-live-2026-10-14T15-11-16.246Z.json` and the inference record
+`evidence/inference-live-2026-10-14T16-02-31.279Z.json` contain the same
+`resultReference`: `QmNLei78zWmzUdbeRB3CiUfAizWUrbeeZh5K1rhAQKCh51`.
+The reason is unverified. The runners retrieve artifacts from job-served HTTP
+endpoints, not from this CID. CID consistency records agreement with an SDK
+response; it does not verify artifact contents or prove that two jobs produced
+the same output. Do not cite this field as artifact-integrity evidence.
+
 - Current market availability, prices and a live enforced cost ceiling.
 - Whether artifacts remain retrievable after the host finishes; the current
   workaround downloads files before stopping the deployment.
