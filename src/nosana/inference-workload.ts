@@ -101,20 +101,23 @@ export function buildInferenceDeploymentBody(input: InferenceBodyInput) {
  * the served directory, so a stalled or failing confidential job can still be
  * diagnosed over its exposed endpoint (the dashboard returns no logs for those).
  */
-export function buildInferenceShell(options: { serve?: boolean } = {}): string {
+export function buildInferenceShell(options: { serve?: boolean; outputDir?: string } = {}): string {
   const serve = options.serve ?? true;
+  const outputDir = options.outputDir ?? INFERENCE_OUT_DIR;
   return [
-    `mkdir -p ${INFERENCE_OUT_DIR} && cd ${INFERENCE_OUT_DIR}`,
-    ...(serve ? [`python -m http.server ${INFERENCE_PORT} >/dev/null 2>&1 &`, "exec >> log.txt 2>&1"] : []),
+    "set -euo pipefail",
+    'trap \'rc=$?; trap - EXIT; if [ "$rc" -ne 0 ]; then echo "INFERENCE_FAILED exit $rc"; fi; if [ -n "${server_pid:-}" ]; then kill "$server_pid" 2>/dev/null || true; wait "$server_pid" 2>/dev/null || true; fi; exit "$rc"\' EXIT',
+    `mkdir -p ${shellQuote(outputDir)} && cd ${shellQuote(outputDir)}`,
+    ...(serve ? [`python3 -m http.server ${INFERENCE_PORT} >/dev/null 2>&1 &`, "server_pid=$!", "exec >> log.txt 2>&1"] : []),
     'echo "$(date -u +%T) start"; nvidia-smi -L; df -h / | tail -1',
-    'echo "huggingface: $(curl -sI -m 10 https://huggingface.co | head -1)"',
-    'echo "pypi: $(curl -sI -m 10 https://pypi.org | head -1)"',
+    'echo "huggingface: $(curl -sI -m 10 https://huggingface.co | head -1 || true)"',
+    'echo "pypi: $(curl -sI -m 10 https://pypi.org | head -1 || true)"',
     'echo "$(date -u +%T) pip install"',
-    "pip install -q transformers==4.46.3 accelerate==1.1.1 || echo PIP_FAILED",
+    "python3 -m pip install -q transformers==4.46.3 accelerate==1.1.1",
     'echo "$(date -u +%T) running model"',
-    `python -u -c ${shellQuote(buildInferenceScript())} || echo "PYTHON_FAILED exit $?"`,
+    `python3 -u -c ${shellQuote(buildInferenceScript())}`,
     'echo "$(date -u +%T) done"',
-    ...(serve ? ["wait"] : []),
+    ...(serve ? ['wait "$server_pid"'] : []),
   ].join("\n");
 }
 

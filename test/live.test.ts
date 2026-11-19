@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
@@ -85,7 +85,7 @@ test("a chain state other than COMPLETED never passes", () => {
   assert.equal(e.gatePassed, false);
 });
 
-import { buildInferenceDeploymentBody, buildInferenceScript, INFERENCE_MODEL_REVISION } from "../src/nosana/inference-workload.ts";
+import { buildInferenceDeploymentBody, buildInferenceScript, buildInferenceShell, INFERENCE_MODEL_REVISION } from "../src/nosana/inference-workload.ts";
 
 test("inference workload: script compiles, pins the model revision, and the job passes secret lint", () => {
   const script = buildInferenceScript();
@@ -109,4 +109,17 @@ test("scheduled inference body is a public, exit-when-done cron deployment; defa
   assert.equal(plain.strategy, "SIMPLE");
   assert.equal(plain.confidential, true);
   assert.equal(plain.job_definition.ops[0].args.expose, 8000);
+});
+
+test("scheduled inference preserves dependency and model failure exit codes", async () => {
+  const dir = await mkdtemp(resolve(tmpdir(), "inference-shell-"));
+  try {
+    for (const [pipCode, modelCode, expected] of [[12, 0, 12], [0, 17, 17], [0, 0, 0]]) {
+      const stubs = `python3(){ if [ "$1" = "-m" ]; then return ${pipCode}; fi; echo MODEL_RAN; return ${modelCode}; }; curl(){ return 0; }; nvidia-smi(){ return 0; };\n`;
+      const run = spawnSync("bash", ["-c", stubs + buildInferenceShell({ serve: false, outputDir: dir })], { encoding: "utf8", timeout: 5000 });
+      assert.equal(run.status, expected, run.stderr);
+      if (expected) assert.match(run.stdout, /INFERENCE_FAILED/);
+      if (pipCode) assert.doesNotMatch(run.stdout, /MODEL_RAN/);
+    }
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });

@@ -1,0 +1,33 @@
+{
+  "jobId": "7DzA6Dr7rFvtbMAkX6GdegGFaxfcrbxEyeZkLsC3KNfg",
+  "deployment": "6j9Qw7hApB5DjAJndRY2UGWsNYJXFrkJptGkrc9zsQz9",
+  "source": {
+    "url": "https://explore.nosana.com/jobs/7DzA6Dr7rFvtbMAkX6GdegGFaxfcrbxEyeZkLsC3KNfg",
+    "observedOn": "2026-11-18",
+    "importedOn": "2026-11-19",
+    "overviewSha256": "16a30a555c16eee909f97418d8b44d7ed00313ad079fe0a72677772c62269698",
+    "resultsSnapshotSha256": "a9d5428c08da6913cb720ca5c0f82ed818d8bf64e094330cdfc68443034cedbf",
+    "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps"
+  },
+  "node": "He7zV2Zkq843rZfCb95sLwjpNingtxsVxmCXGB5bYidy",
+  "startedAt": "2026-10-22T08:23:41Z",
+  "wallSeconds": 1812,
+  "status": "failed",
+  "exitCode": null,
+  "logs": [
+    "- Executed step 'ocr-daily-benchmark'",
+    "[notice] A new release of pip is available: 25.2 -> 26.2.2",
+    "[notice] To update, run: python3.12 -m pip install --upgrade pip",
+    "GPU NVIDIA GeForce RTX 3090 Ti, 24564 MiB, 580.178.04",
+    "/usr/local/lib/python3.12/dist-packages/fitz/__init__.py:17: FutureWarning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.",
+    "warnings.warn(",
+    "PAGES 22 degraded 11",
+    "Exited with status running with code null",
+    "- Job failed with status 'init error'",
+    "this.operations is not iterable"
+  ],
+  "errors": [
+    "- Job failed with status 'init error'",
+    "this.operations is not iterable"
+  ]
+}

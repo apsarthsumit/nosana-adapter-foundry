@@ -1,5 +1,7 @@
 {
  "deployment": "9qsDvmfYDXu9Ne8L6ac9e5uWrALYhrAgNJF3QxzMPAF5",
+ "schemaVersion": "ocr-evidence@1",
+ "executionMode": "nosana-live",
  "jobId": "9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X",
  "node": "GzsmEa1goByh6tFrgzU6yBpFv8KGJHJhCwS87wV1ET3E",
  "timeStart": 1792098352,
@@ -8,6 +10,7 @@
  "jobStatus": "success",
  "outcome": "result",
  "infrastructureError": null,
+ "validationError": null,
  "summary": {
   "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.99.02",
   "results": [
@@ -314,5 +317,15 @@
   ],
   "total_seconds": 376,
   "utc_start": "2026-10-15T21:05:58Z"
+ },
+ "provenance": {
+  "url": "https://explore.nosana.com/jobs/9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X",
+  "observedOn": "2026-11-18",
+  "importedOn": "2026-11-19",
+  "overviewSha256": "1e20e830049b1fd792c256d85be3236ae45e92307d0ba19689d4eff365e7e662",
+  "resultsSnapshotSha256": "7c3db35456fdc6743c4bbd36f93f14d106049dfc024d9344741d828a9d02a14d",
+  "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps",
+  "method": "archived-public-explorer-result-logs",
+  "runtimeLogSha256": "55ee2e00d031080bcf1561fe685e7e42016bd5997a6d387804a7c91e6f0b830e"
  }
 }

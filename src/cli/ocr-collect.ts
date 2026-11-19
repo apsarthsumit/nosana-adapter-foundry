@@ -26,12 +26,12 @@ for (const job of await api.jobs(deployment)) {
   const path = resolve(dir, `${job.job}.json`);
   if (existsSync(path)) {
     const prior = JSON.parse(await readFile(path, "utf8")) as OcrEvidence;
-    if (prior.outcome !== "no-result") continue;
+    if (prior.schemaVersion === "ocr-evidence@1" && prior.outcome !== "no-result") continue;
   }
   const evidence = buildOcrEvidence(job.job, await api.job(deployment, job.job));
   const findings = lintSecrets(evidence);
   if (findings.length) throw new Error(`secret lint failed for ${job.job}: ${JSON.stringify(findings)}`);
-  await writeFile(path, JSON.stringify({ deployment, ...evidence }, null, 1) + "\n");
+  await writeFile(path, JSON.stringify({ deployment, ...evidence, provenance: { method: "nosana-deployments-api", fetchedAt: new Date().toISOString() } }, null, 1) + "\n");
   written++;
   console.log(JSON.stringify({ job: job.job, outcome: evidence.outcome, wallSeconds: evidence.wallSeconds, error: evidence.infrastructureError }));
 }

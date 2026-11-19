@@ -1,0 +1,33 @@
+{
+  "jobId": "AsW4VbKsTR3CopKUY7YLbdWgFRAUeVq3k791kMyQ3qsx",
+  "deployment": "6j9Qw7hApB5DjAJndRY2UGWsNYJXFrkJptGkrc9zsQz9",
+  "source": {
+    "url": "https://explore.nosana.com/jobs/AsW4VbKsTR3CopKUY7YLbdWgFRAUeVq3k791kMyQ3qsx",
+    "observedOn": "2026-11-18",
+    "importedOn": "2026-11-19",
+    "overviewSha256": "f9a327eaefa7dd7600cdb366e601cf688520bffc893f5c3d2912b3692f37d347",
+    "resultsSnapshotSha256": "6702b36e1f0b3110ebd005aef91161f2461cfa73bb52339f3fcbccb6b4ed1ca5",
+    "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps"
+  },
+  "node": "3AAt75F9rodi7Mchn9KJJJFvg8FTPd4nr1idBdBcRU3V",
+  "startedAt": "2026-10-16T05:10:01Z",
+  "wallSeconds": 77,
+  "status": "failed",
+  "exitCode": 1,
+  "logs": [
+    "- Executed step 'ocr-daily-benchmark'",
+    "[notice] A new release of pip is available: 25.2 -> 26.2.1",
+    "[notice] To update, run: python3.12 -m pip install --upgrade pip",
+    "GPU NVIDIA GeForce RTX 3090, 24576 MiB, 595.91.07",
+    "warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.",
+    "PAGES 22 degraded 11",
+    "vllm start failed, attempt 1 e 935, in _load_unlocked | File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module | File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code | File \"<frozen importlib._bootstrap_external>\", line 757, in _compile_bytecode | ValueError: bad marshal data (unknown type code) |",
+    "vllm start failed, attempt 2 e 935, in _load_unlocked | File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module | File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code | File \"<frozen importlib._bootstrap_external>\", line 757, in _compile_bytecode | ValueError: bad marshal data (unknown type code) |",
+    "vllm start failed, attempt 1 e 935, in _load_unlocked | File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module | File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code | File \"<frozen importlib._bootstrap_external>\", line 757, in _compile_bytecode | ValueError: bad marshal data (unknown type code) |",
+    "vllm start failed, attempt 2 e 935, in _load_unlocked | File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module | File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code | File \"<frozen importlib._bootstrap_external>\", line 757, in _compile_bytecode | ValueError: bad marshal data (unknown type code) |",
+    "OCR_DAILY_FAILED {\"gpu\": \"NVIDIA GeForce RTX 3090, 24576 MiB, 595.91.07\", \"results\": [{\"detail\": \"e 935, in _load_unlocked\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 995, in exec_module\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 1128, in get_code\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 757, in _compile_bytecode\\nValueError: bad marshal data (unknown type code)\\n\", \"error\": \"server did not start\", \"model\": \"nanonets/Nanonets-OCR2-1.5B-exp\", \"revision\": \"49a96f20ac641c7b3ad811914968ea8e1ace1760\"}, {\"detail\": \"e 935, in _load_unlocked\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 995, in exec_module\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 1128, in get_code\\n File \\\"<frozen importlib._bootstrap_external>\\\", line 757, in _compile_bytecode\\nValueError: bad marshal data (unknown type code)\\n\", \"error\": \"server did not start\", \"model\": \"nanonets/Nanonets-OCR2-3B\", \"revision\": \"c3886ff00bb037ce7da24988c9eafaf1fe2bed72\"}], \"scoring\": \"word F1 vs PDF text layer (proxy)\", \"sources\": [\"https://arxiv.org/pdf/1706.03762v7\", \"https://arxiv.org/pdf/2005.14165v4\", \"https://arxiv.org/pdf/1512.03385v1\"], \"total_seconds\": 63, \"utc_start\": \"2026-10-16T05:10:09Z\"}",
+    "EXIT_CODE 1",
+    "Exited with status failed with code 1"
+  ],
+  "errors": []
+}

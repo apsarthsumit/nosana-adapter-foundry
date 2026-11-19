@@ -30,7 +30,7 @@ top of the same infrastructure.
 
 ## Current status
 
-**Prototype. Gate 1 has passed twice on live Nosana (the first run was verified by hand, the second by the runner in this repository), and one small open model has run end to end. Nothing here is a sustained workload yet.**
+**Prototype. MEASURED — checked-in evidence records two Gate 1 round trips, one small-model inference result, and eight OCR attempts from October 15–22: four results and four failures. Sources: `evidence/`, `evidence/ocr-daily/`, and `evidence/ocr-sources/`. This is self-run research, without demonstrated customer demand.**
 
 Two live runs on the Nosana mainnet (2026-10-14), both submitted by code in this
 repository, each with a job ID that can be looked up on the Nosana explorer:
@@ -42,8 +42,8 @@ repository, each with a job ID that can be looked up on the Nosana explorer:
 
 Scope of those claims: **transfer integrity and a real end-to-end execution
 only.** They do not show that model output is correct, and they do not claim
-identical output across different hardware. Total spend so far is a few
-hundredths of a credit; this is a working pipeline, not a production workload.
+identical output across different hardware. A current total-spend figure has
+not been reconciled across all historical attempts.
 
 A simulation evidence record is still permanently marked
 `"executionMode": "simulation"`, and the schema makes `"gatePassed": true`
@@ -60,7 +60,7 @@ structurally impossible outside a live, independently verified run. See
 | Artifact retrieval from a completed job | Works via an HTTP endpoint the job itself serves (not via the CLI; see below) |
 | Independent on-chain job state | Implemented via `@nosana/sdk`, run live |
 | Real-model inference adapter | One small model, run live once; no scale or reproducibility testing yet |
-| Daily OCR benchmark (`containers/ocr-benchmark/`) | Pinned inputs; one manual live run on 2026-10-15, then a daily schedule; results collected into `evidence/ocr-daily/` |
+| Daily OCR benchmark (`containers/ocr-benchmark/`) | MEASURED — one manual result and seven scheduled attempts, including three results and four failures; see `evidence/ocr-daily/`. The last dashboard check on November 18 showed a stopped/error schedule and insufficient credits. |
 
 ## What Gate 1 tests
 
@@ -99,12 +99,14 @@ git clone https://github.com/apsarthsumit/nosana-adapter-foundry.git
 cd nosana-adapter-foundry
 npm install
 npm test
-npm run gate1:validate-job
 npm run gate1:simulate
+npm run website:check
+node scripts/import-ocr-history.mjs --check
 ```
 
-`npm test` runs the unit and schema tests. `npm run gate1:validate-job`
-checks the job definition against the official Nosana CLI validator.
+`npm test` runs the unit and schema tests. The separate `npm run gate1:validate-job`
+checks the static job template against the official Nosana CLI validator;
+it does not validate the different payload submitted by the live runner.
 `npm run gate1:simulate` runs the full local pipeline and writes an evidence
 file to `evidence/`. None of these three commands submit a job, spend NOS or
 SOL, or require a wallet.
@@ -135,7 +137,7 @@ reports for the packages a live submission would exercise.
 ## Daily OCR benchmark (our own recurring workload)
 
 Nosana's grants team asked for ongoing GPU usage, so this repository now runs one
-recurring workload of its own: a document-OCR benchmark of two open models
+historical recurring workload of its own: a document-OCR benchmark of two open models
 (`Nanonets-OCR2-1.5B-exp` and `Nanonets-OCR2-3B`, pinned to Hugging Face commits)
 served with vLLM on an RTX 3090 node, scored on 22 pinned pages from three
 versioned arXiv PDFs (half degraded). Each run prints one `OCR_DAILY_RESULT` line;
@@ -145,9 +147,17 @@ pull, CUDA fault) separately from benchmark failures.
 
 What this is not: **it is not customer traffic**, and the score is word-level F1
 against each PDF's own text layer, a proxy for OCR quality rather than a
-ground-truth benchmark. A run is about 0.1 GPU-hours (about 0.02 credits), so this
-is a small workload. The first manual run (job `9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X`,
+ground-truth benchmark. MEASURED — recorded elapsed durations vary substantially,
+including failed attempts; see `evidence/ocr-daily/`. The first manual run (job `9D7daDMe4ThvDXEftWAi2ZSkygZa6P6yN1KYWkQp398X`,
 394 s) scored 0.835 (1.5B) and 0.849 (3B) mean F1.
+
+MEASURED — `evidence/ocr-sources/` preserves the extracted public explorer logs,
+source URLs, snapshot hashes, and displayed timing precision for all eight
+attempts. `node scripts/import-ocr-history.mjs --check` verifies their deterministic
+conversion into the normalized evidence records. These are recovered historical
+logs, not new executions or independently signed attestations. The score uses
+ASCII token overlap; it does not measure reading order, layout, or general OCR
+accuracy. Clean and degraded pages are different pages rather than paired samples.
 
 ```bash
 GATE1_LIVE=1 npm run ocr:schedule -- --live --cron "10 5 * * *"   # spends credits daily until stopped
@@ -232,8 +242,9 @@ credential, and never present simulation output as a live result.
 
 ## Limitations
 
-- Live evidence is two runs on one day. There is no sustained or repeated
-  usage yet, and no cross-node reproducibility testing.
+- MEASURED — the checked-in OCR history spans eight days with four successes
+  and four failures (`evidence/ocr-daily/`). There is no demonstrated sustained
+  customer workload or controlled cross-node reproducibility study.
 - The live jobs run Python inside stock public images
   (`nosana/pytorch-jupyter`, `pytorch/pytorch`). The Node container image in
   `containers/` and `gate1-artifact-roundtrip.job.json` are not what the live
@@ -243,13 +254,13 @@ credential, and never present simulation output as a live result.
 - The first live inference attempts timed out (a 1.5B model's weights did not
   finish downloading on the node); the 0.5B model is what succeeded. Those
   attempts are not hidden: they appear in the git history of this work.
-- Dependency vulnerabilities exist in `@nosana/cli`'s own dependency tree.
-  None are known to be reachable through the commands this project currently
-  runs (`validate`, `--simulate`); several would become reachable the moment
-  a live job is posted. See `docs/dependency-risk.md`.
-- This project has not been tested on Node.js 25. The Docker image pins an
-  exact Node 22 version and is unaffected; the plain npm scripts have only
-  been verified on Node 22.19.0.
+- MEASURED — dependency audit findings are recorded in `docs/dependency-risk.md`;
+  that historical reachability analysis does not establish safety of current
+  live paths. Updating and reviewing the CLI/SDK dependencies remains open.
+- Runtime dependencies and container tags are not fully pinned. Model revisions
+  and source PDF versions are pinned; that alone does not make execution reproducible.
+- The deployments API returned HTTP 401 during the November 19 review. Supported
+  access and artifact egress need confirmation before restarting paid jobs.
 - CI does not run `npm run gate1:validate-job`, because the installed
   Nosana CLI performs a live network call to the npm registry on every
   invocation and can fail for reasons unrelated to the job definition's own

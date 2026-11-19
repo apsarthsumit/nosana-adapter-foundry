@@ -1,0 +1,25 @@
+{
+ "deployment": "6j9Qw7hApB5DjAJndRY2UGWsNYJXFrkJptGkrc9zsQz9",
+ "schemaVersion": "ocr-evidence@1",
+ "executionMode": "nosana-live",
+ "jobId": "3SZSEF1fKYGKztTWp4ia5TEHCcbVACxKYPijoRwpr1nm",
+ "node": "4nao4jxJcBGMQDLbsz8G7jkKGeZuWSR6ruefe9NRx5Bg",
+ "timeStart": 1792300200,
+ "timeEnd": 1792300982,
+ "wallSeconds": 782,
+ "jobStatus": "failed",
+ "outcome": "failed",
+ "infrastructureError": "- Job failed with status 'init error'",
+ "validationError": "job or benchmark operation failed",
+ "summary": null,
+ "provenance": {
+  "url": "https://explore.nosana.com/jobs/3SZSEF1fKYGKztTWp4ia5TEHCcbVACxKYPijoRwpr1nm",
+  "observedOn": "2026-11-18",
+  "importedOn": "2026-11-19",
+  "overviewSha256": "aa59f5a857e6eb6a826c2da55d430767d160915d1793fcbc20fa328fd7186676",
+  "resultsSnapshotSha256": "0b5a4a157937461cae3767396e215a1c81fc8e151c2399284413f2291cb53019",
+  "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps",
+  "method": "archived-public-explorer-result-logs",
+  "runtimeLogSha256": "4f31e904dae3d15483a6f8fb43eeffcfaba023c167734fd203aa1302f561b54f"
+ }
+}

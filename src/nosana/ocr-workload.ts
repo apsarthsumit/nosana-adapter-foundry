@@ -9,9 +9,11 @@
 // quality.
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { lintSecrets } from "../security/secret-lint.ts";
+import { OCR_OPERATION_ID } from "./ocr-contract.ts";
 
 export const OCR_IMAGE = "docker.io/vllm/vllm-openai:v0.10.2"; // on the 3090 market's pre-pulled image list (checked 2026-10-15)
-export const OCR_OP_ID = "ocr-daily-benchmark";
+export const OCR_OP_ID = OCR_OPERATION_ID;
 export const OCR_SCRIPT_PATH = resolve(import.meta.dirname, "../../containers/ocr-benchmark/bench.py");
 /** Hard cap inside the container so a hung model server cannot burn the whole job timeout. */
 export const OCR_SCRIPT_TIMEOUT_SECONDS = 2400;
@@ -26,9 +28,11 @@ export function readOcrScript(): string {
 }
 
 export function buildOcrShell(script: string = readOcrScript()): string {
+  if (lintSecrets(script).length) throw new Error("OCR source failed secret lint before encoding");
   const b64 = Buffer.from(script, "utf8").toString("base64");
   return [
-    "pip install -q pymupdf pillow requests 2>&1 | tail -2",
+    "set -uo pipefail",
+    "python3 -m pip install -q pymupdf pillow requests 2>&1 | tail -2 || exit $?",
     `echo ${b64} | base64 -d > /tmp/bench.py`,
     `timeout ${OCR_SCRIPT_TIMEOUT_SECONDS} python3 /tmp/bench.py`,
     "rc=$?",

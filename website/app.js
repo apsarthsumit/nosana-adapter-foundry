@@ -38,17 +38,17 @@ export function evidenceRows(summary) {
   const day = (iso) => (iso ? iso.replace("T", " ").replace(/:\d\d(\.\d+)?Z$/, "") : "unknown");
   const rows = [];
   for (const g of summary.gate1Live ?? []) {
-    rows.push({ run: `Gate 1 round trip ${short(g.jobId)}`, when: day(g.completedAt), result: `${g.bytes.toLocaleString("en-US")} bytes, SHA-256 ${g.hashMatch ? "match" : "MISMATCH"}, ${g.wallClockSeconds} s${String(g.verifier ?? "").startsWith("manual") ? ", verified by hand" : ""}` });
+    rows.push({ jobId: g.jobId, run: `Gate 1 round trip ${short(g.jobId)}`, when: day(g.completedAt), result: `${g.bytes.toLocaleString("en-US")} bytes, SHA-256 ${g.hashMatch ? "match" : "MISMATCH"}, ${g.wallClockSeconds} s${String(g.verifier ?? "").startsWith("manual") ? ", verified by hand" : ""}` });
   }
   for (const i of summary.inferenceLive ?? []) {
-    rows.push({ run: `Inference ${short(i.jobId)}`, when: day(i.submittedAt), result: `${i.model} on ${gpuName(i.gpu)}` });
+    rows.push({ jobId: i.jobId, run: `Inference ${short(i.jobId)}`, when: day(i.submittedAt), result: `${i.model} on ${gpuName(i.gpu)}` });
   }
   for (const r of summary.ocrDaily?.runs ?? []) {
     const detail = r.outcome === "result"
       ? `OCR 1.5B F1 ${r.f1Ocr15b}, 3B F1 ${r.f1Ocr3b}, ${r.wallSeconds} s on ${gpuName(r.gpu)}`
-      : r.outcome === "failed" ? "benchmark failed (see evidence file)"
+      : r.outcome === "failed" ? `failed: ${r.infrastructureError ?? r.validationError ?? "see evidence file"}`
       : `no result: ${r.infrastructureError ?? "job not finished or no logs returned"}`;
-    rows.push({ run: `OCR benchmark ${short(r.jobId)}`, when: day(r.startedAt), result: detail });
+    rows.push({ jobId: r.jobId, run: `OCR benchmark ${short(r.jobId)}`, when: day(r.startedAt), result: detail });
   }
   return rows;
 }
@@ -73,13 +73,24 @@ async function renderEvidence() {
     const summary = await res.json();
     const gate1 = document.querySelector("#stat-gate1");
     const ocr = document.querySelector("#stat-ocr");
+    const ocrSuccess = document.querySelector("#stat-ocr-success");
+    const ocrFailed = document.querySelector("#stat-ocr-failed");
     if (gate1) gate1.textContent = String(summary.gate1Live.filter((g) => g.hashMatch).length);
     if (ocr) ocr.textContent = String(summary.ocrDaily.total);
+    if (ocrSuccess) ocrSuccess.textContent = String(summary.ocrDaily.results);
+    if (ocrFailed) ocrFailed.textContent = String(summary.ocrDaily.benchmarkFailed);
     body.replaceChildren(...evidenceRows(summary).map((row) => {
       const tr = document.createElement("tr");
-      for (const text of [row.run, row.when, row.result]) {
+      for (const [index, text] of [row.run, row.when, row.result].entries()) {
         const td = document.createElement("td");
-        td.textContent = text;
+        if (index === 0 && /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(row.jobId)) {
+          const link = document.createElement("a");
+          link.href = `https://explore.nosana.com/jobs/${row.jobId}`;
+          link.textContent = text;
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          td.append(link);
+        } else td.textContent = text;
         tr.append(td);
       }
       return tr;

@@ -1,0 +1,331 @@
+{
+ "deployment": "6j9Qw7hApB5DjAJndRY2UGWsNYJXFrkJptGkrc9zsQz9",
+ "schemaVersion": "ocr-evidence@1",
+ "executionMode": "nosana-live",
+ "jobId": "5BnRzqD5oenNfc6JFTijU41mfMV8JyS28WgTobJ7FYkq",
+ "node": "MTQEBNAB7Ky2KetJn9EM6dsvMKQxpMyBujSdEA3ShQX",
+ "timeStart": 1792213801,
+ "timeEnd": 1792214379,
+ "wallSeconds": 578,
+ "jobStatus": "success",
+ "outcome": "result",
+ "infrastructureError": null,
+ "validationError": null,
+ "summary": {
+  "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 580.82.09",
+  "results": [
+   {
+    "avg_completion_tokens": 1331.6364,
+    "batch8_wall_s": 49.6,
+    "mean_f1_all": 0.8352,
+    "mean_f1_clean": 0.838,
+    "mean_f1_degraded": 0.8325,
+    "model": "nanonets/Nanonets-OCR2-1.5B-exp",
+    "pages": 22,
+    "pages_per_hour": 1595,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9273,
+      "tokens": 744
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9704,
+      "tokens": 855
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.9235,
+      "tokens": 464
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.8217,
+      "tokens": 789
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.9173,
+      "tokens": 822
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8925,
+      "tokens": 1032
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.9779,
+      "tokens": 848
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.8274,
+      "tokens": 1556
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.8611,
+      "tokens": 868
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.9816,
+      "tokens": 376
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.9605,
+      "tokens": 771
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.974,
+      "tokens": 809
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9736,
+      "tokens": 799
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.97,
+      "tokens": 1158
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.0826,
+      "tokens": 4096
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.8304,
+      "tokens": 1879
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.8936,
+      "tokens": 942
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9088,
+      "tokens": 1287
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.8994,
+      "tokens": 1387
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.137,
+      "tokens": 4096
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.801,
+      "tokens": 1618
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.8439,
+      "tokens": 2100
+     }
+    ],
+    "revision": "49a96f20ac641c7b3ad811914968ea8e1ace1760",
+    "runaway_pages": 2,
+    "server_start_s": 186.1
+   },
+   {
+    "avg_completion_tokens": 1162.2727,
+    "batch8_wall_s": 70.6,
+    "mean_f1_all": 0.8607,
+    "mean_f1_clean": 0.8938,
+    "mean_f1_degraded": 0.8275,
+    "model": "nanonets/Nanonets-OCR2-3B",
+    "pages": 22,
+    "pages_per_hour": 1121,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9954,
+      "tokens": 653
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9758,
+      "tokens": 850
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.8775,
+      "tokens": 591
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.8114,
+      "tokens": 841
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.914,
+      "tokens": 830
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8679,
+      "tokens": 898
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.984,
+      "tokens": 826
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.7974,
+      "tokens": 1541
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.9597,
+      "tokens": 570
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.5649,
+      "tokens": 1143
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.8565,
+      "tokens": 1151
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.8524,
+      "tokens": 1069
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9192,
+      "tokens": 1050
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.9711,
+      "tokens": 1154
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.7481,
+      "tokens": 981
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.8489,
+      "tokens": 1786
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.9018,
+      "tokens": 1055
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9164,
+      "tokens": 1241
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.9013,
+      "tokens": 1426
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.6768,
+      "tokens": 2088
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.7747,
+      "tokens": 2013
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.8198,
+      "tokens": 1813
+     }
+    ],
+    "revision": "c3886ff00bb037ce7da24988c9eafaf1fe2bed72",
+    "runaway_pages": 0,
+    "server_start_s": 183.1
+   }
+  ],
+  "scoring": "word F1 vs PDF text layer (proxy)",
+  "sources": [
+   "https://arxiv.org/pdf/1706.03762v7",
+   "https://arxiv.org/pdf/2005.14165v4",
+   "https://arxiv.org/pdf/1512.03385v1"
+  ],
+  "total_seconds": 562,
+  "utc_start": "2026-10-17T05:10:08Z"
+ },
+ "provenance": {
+  "url": "https://explore.nosana.com/jobs/5BnRzqD5oenNfc6JFTijU41mfMV8JyS28WgTobJ7FYkq",
+  "observedOn": "2026-11-18",
+  "importedOn": "2026-11-19",
+  "overviewSha256": "13392b76686d411c32ca99697958dcffaf2de8fbba4b0ba35fe5fb1bcd93726a",
+  "resultsSnapshotSha256": "b83a663adf66b36c4c7528a8ef0b9de4c2d375021ae0c96fce7fbcfcb79267d7",
+  "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps",
+  "method": "archived-public-explorer-result-logs",
+  "runtimeLogSha256": "04e0afa09b076ae4d0a2402f5cb642880d67bf5936139946d828bde4f7c47d68"
+ }
+}

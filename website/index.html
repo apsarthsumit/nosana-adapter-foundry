@@ -47,13 +47,13 @@
         <div class="hero-copy">
           <div class="status-row">
             <p class="eyebrow"><span></span> Nosana grant proposal</p>
-            <p class="status-chip">54 AUTOMATED TESTS PASSING</p>
+            <p class="status-chip">60 AUTOMATED TESTS PASSING</p>
           </div>
           <h1>AI workloads that<br /><em>prove what happened.</em></h1>
           <p class="lede">Package, run, retrieve, and independently verify AI workloads across decentralized GPU providers. No hand-waving. No simulation presented as production.</p>
           <aside class="hero-status" aria-label="Current prototype status">
             <strong>PROTOTYPE STATUS: SELF-RUN</strong>
-            <span>Gate 1 has passed twice on live Nosana and a small open model has run end to end. A daily OCR benchmark is scheduled from 16 Oct 2026 and has so far run once by hand. All usage so far is our own, not customer traffic, and nothing here is a production workload yet.</span>
+            <span>Gate 1 has passed twice on live Nosana and a small open model has run end to end. OCR history from 15 to 22 Oct 2026 contains four successful comparisons and four failed attempts. The schedule was in an error state when checked on 18 Nov; recent events reported insufficient credits. All usage so far is our own, not customer traffic, and nothing here is a production workload yet.</span>
           </aside>
           <div class="hero-actions">
             <a class="button primary" data-github data-live-label="Explore the prototype" href="#repository"><span class="link-label">Explore the prototype</span> <span class="link-arrow">↓</span></a>
@@ -76,7 +76,7 @@
             <p><span class="check">✓</span> job definition <strong>valid</strong></p>
             <p><span class="check">✓</span> safety boundary <strong>enforced</strong></p>
             <div class="rule"></div>
-            <p class="result"><span>54 tests passed</span><span>simulation ≠ live</span></p>
+            <p class="result"><span>60 tests passed</span><span>simulation ≠ live</span></p>
           </div>
         </div>
       </section>
@@ -110,9 +110,9 @@
 
       <section class="proof-strip" id="proof">
         <div class="shell proof-grid">
-          <div><strong>54</strong><span>automated tests passing</span></div>
+          <div><strong>60</strong><span>automated tests passing</span></div>
           <div><strong id="stat-gate1">2</strong><span>live Gate 1 round trips, hash match</span></div>
-          <div><strong id="stat-ocr">0</strong><span>OCR benchmark runs recorded</span></div>
+          <div><strong id="stat-ocr">8</strong><span>OCR attempts: <span id="stat-ocr-success">4</span> results, <span id="stat-ocr-failed">4</span> failed</span></div>
           <div><strong>SHA-256</strong><span>independent integrity check</span></div>
         </div>
       </section>
@@ -149,7 +149,8 @@
         <div class="section-heading">
           <p class="section-tag">LIVE EVIDENCE</p>
           <h2>What has actually run on Nosana.</h2>
-          <p>Generated from the evidence files in the repository. Every job id can be looked up on the Nosana explorer. The OCR benchmark is our own recurring workload, scored by word overlap with each PDF’s text layer, which is a proxy for OCR quality.</p>
+          <p>Generated from the evidence files in the repository. Each job links to its public explorer record; open Results for the actual output and exit status. OCR history includes one manual success and seven scheduled attempts: three successes and four failures. Scores measure word overlap with each PDF’s text layer, a small proxy for OCR quality. They do not measure reading order, tables, equations or customer demand.</p>
+          <p>Historical OCR logs were recovered from the public explorer on 18 Nov 2026. Runtime-reported hardware is retained because current node metadata can differ from historical logs; the cause of the difference is unresolved. A dashboard label of completed is not sufficient evidence of a successful benchmark.</p>
         </div>
         <div class="evidence-table-wrap">
           <table class="evidence-table" aria-label="Live runs on Nosana">
@@ -182,12 +183,12 @@
       <section class="section shell" id="roadmap">
         <div class="section-heading row-heading">
           <div><p class="section-tag">GRANT ROADMAP</p><h2>From one proof to an ecosystem.</h2></div>
-          <p>Four bounded milestones turn the verification core into reusable public infrastructure.</p>
+          <p>Five engineering stages describe the prototype and remaining work. These stages are not an awarded grant or a funding agreement.</p>
         </div>
         <ol class="roadmap">
           <li class="complete" data-reveal><span>01</span><div><small>LOCAL FOUNDATION</small><h3>Deterministic verification core</h3><p>Generate, stream-hash, compare, validate evidence, and prevent simulated results from passing the live gate.</p></div><b>COMPLETE</b></li>
           <li class="complete" data-reveal><span>02</span><div><small>LIVE ROUND TRIP</small><h3>Live Nosana artifact round trip</h3><p>Passed twice on 14 Oct 2026 with matching SHA-256 through a job-served endpoint. Confirming Nosana’s recommended egress path is still open.</p></div><b>DONE</b></li>
-          <li class="active" data-reveal><span>03</span><div><small>GPU WORKLOADS</small><h3>Inference adapter and daily OCR benchmark</h3><p>One small model has run live. A daily benchmark of two open OCR models is scheduled from 16 Oct 2026 and has run once by hand so far. Reproducibility across nodes is not yet measured.</p></div><b>IN PROGRESS</b></li>
+          <li class="active" data-reveal><span>03</span><div><small>GPU WORKLOADS</small><h3>Inference adapter and OCR benchmark</h3><p>One small model has run live. Four OCR comparisons succeeded and four attempts failed. Recovery, runtime packaging and repeated-run reliability remain engineering work; no production reliability claim is made.</p></div><b>IN PROGRESS</b></li>
           <li data-reveal><span>04</span><div><small>FINE-TUNING</small><h3>Evaluation and parameter-efficient fine-tuning</h3><p>Add a bounded GPU fine-tuning job with a base-model versus adapter evaluation. Not started.</p></div></li>
           <li data-reveal><span>05</span><div><small>ECOSYSTEM</small><h3>Public developer release</h3><p>Ship stable tooling, examples, technical reports, and onboarding documentation once the milestones above hold up under real use.</p></div></li>
         </ol>

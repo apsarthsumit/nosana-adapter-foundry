@@ -107,6 +107,7 @@ function computeGatePassed(value: JobEvidence): boolean {
   if (!value.hashMatch) return false;
   if (value.failureReason !== null) return false;
   if (!looksLikeSolanaAddress(value.nosanaJobId)) return false;
+  if (!looksLikeSolanaAddress(value.market) || !looksLikeSolanaAddress(value.node)) return false;
   if (!looksLikeIpfsCid(value.resultReference)) return false;
   if (!isValidTimestamp(value.verifiedAt)) return false;
   if (!value.completedAt || Date.parse(value.verifiedAt as string) < Date.parse(value.completedAt)) return false;
@@ -116,9 +117,12 @@ function computeGatePassed(value: JobEvidence): boolean {
   if (!state) return false;
   if (state.status !== "COMPLETED") return false;
   if (!isValidTimestamp(state.fetchedAt)) return false;
-  if (value.market !== null && state.market !== null && state.market !== value.market) return false;
-  if (value.node !== null && state.node !== null && state.node !== value.node) return false;
-  if (state.ipfsResult !== null && state.ipfsResult !== value.resultReference) return false;
+  if (state.market !== value.market || state.node !== value.node) return false;
+  if (state.ipfsResult !== value.resultReference) return false;
+  if (!Number.isSafeInteger(state.timeStart) || !Number.isSafeInteger(state.timeEnd)) return false;
+  if (state.timeStart! < 0 || state.timeEnd! <= state.timeStart!) return false;
+  if (state.timeEnd! * 1000 !== Date.parse(value.completedAt)) return false;
+  if (!Number.isFinite(state.priceRaw) || state.priceRaw! < 0) return false;
 
   return true;
 }
@@ -129,12 +133,12 @@ export function validateEvidence(value: JobEvidence): void {
   if (!sha256Pattern.test(value.jobDefinitionSha256) || !sha256Pattern.test(value.artifactExpectedSha256)) {
     throw new Error("invalid SHA-256 value");
   }
-  if (value.artifactExpectedBytes < 1) throw new Error("invalid artifact size");
+  if (!Number.isSafeInteger(value.artifactExpectedBytes) || value.artifactExpectedBytes < 1) throw new Error("invalid artifact size");
 
   const actualPresent = value.artifactActualSha256 !== null && value.artifactActualBytes !== null;
   if (actualPresent) {
     if (!sha256Pattern.test(value.artifactActualSha256 as string)) throw new Error("invalid SHA-256 value");
-    if ((value.artifactActualBytes as number) < 0) throw new Error("invalid artifact size");
+    if (!Number.isSafeInteger(value.artifactActualBytes) || (value.artifactActualBytes as number) < 0) throw new Error("invalid artifact size");
   }
   const expectedHashMatch =
     actualPresent &&
@@ -148,7 +152,7 @@ export function validateEvidence(value: JobEvidence): void {
     if (Date.parse(value.completedAt) < Date.parse(value.submittedAt)) throw new Error("completedAt precedes submittedAt (negative duration)");
   }
   if (value.wallClockSeconds !== null) {
-    if (value.wallClockSeconds < 0) throw new Error("wallClockSeconds is negative");
+    if (!Number.isFinite(value.wallClockSeconds) || value.wallClockSeconds < 0) throw new Error("wallClockSeconds is negative or non-finite");
     if (value.completedAt !== null) {
       const expectedSeconds = (Date.parse(value.completedAt) - Date.parse(value.submittedAt)) / 1000;
       if (Math.abs(value.wallClockSeconds - expectedSeconds) > 1) throw new Error("wallClockSeconds is inconsistent with submittedAt/completedAt");

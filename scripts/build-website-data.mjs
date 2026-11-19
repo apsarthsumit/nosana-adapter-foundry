@@ -5,6 +5,8 @@
 //   node scripts/build-website-data.mjs --check  fail if the committed file is stale
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { validateEvidence } from "../src/evidence/job-evidence.ts";
+import { validateOcrSummary } from "../src/nosana/ocr-evidence.ts";
 
 const root = path.resolve(import.meta.dirname, "..");
 const readJson = async (file) => JSON.parse(await readFile(file, "utf8"));
@@ -20,6 +22,7 @@ export async function buildSummary() {
     if (!name.endsWith(".json")) continue;
     const d = await readJson(path.join(evidenceDir, name));
     if (name.startsWith("gate1-live-") && d.executionMode === "nosana-live") {
+      validateEvidence(d);
       gate1Live.push({ jobId: d.nosanaJobId, completedAt: d.completedAt, wallClockSeconds: Math.round(d.wallClockSeconds), bytes: d.artifactActualBytes, hashMatch: d.hashMatch, gatePassed: d.gatePassed, verifier: d.verifierVersion ?? null });
     }
     if (name.startsWith("inference-live-") && d.executionMode === "nosana-live") {
@@ -33,7 +36,9 @@ export async function buildSummary() {
   const runs = [];
   for (const name of ocrFiles) {
     const e = await readJson(path.join(ocrDir, name));
-    const results = e.summary?.results ?? [];
+    if (e.schemaVersion !== "ocr-evidence@1" || e.executionMode !== "nosana-live") throw new Error(`unvalidated OCR evidence: ${name}`);
+    if (e.outcome === "result" && (e.jobStatus !== "success" || e.validationError !== null || validateOcrSummary(e.summary))) throw new Error(`invalid successful OCR evidence: ${name}`);
+    const results = Array.isArray(e.summary?.results) ? e.summary.results : [];
     const f1 = (model) => results.find((r) => r.model === model)?.mean_f1_all ?? null;
     runs.push({
       jobId: e.jobId,
@@ -44,6 +49,8 @@ export async function buildSummary() {
       f1Ocr15b: f1("nanonets/Nanonets-OCR2-1.5B-exp"),
       f1Ocr3b: f1("nanonets/Nanonets-OCR2-3B"),
       infrastructureError: e.infrastructureError ?? null,
+      validationError: e.validationError ?? null,
+      source: e.provenance?.method ?? null,
     });
   }
   runs.sort((a, b) => String(a.startedAt).localeCompare(String(b.startedAt)) || a.jobId.localeCompare(b.jobId));

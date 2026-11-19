@@ -1,9 +1,9 @@
 # Contributing
 
-Nosana Adapter Foundry is an early prototype. Gate 1 is the only verified
-component so far, and it runs in simulation mode only. Contributions are
-welcome, but please read this document and `docs/gate1-assumptions.md`
-before opening a pull request, so your change lands in the right place.
+Nosana Adapter Foundry is an early prototype. Saved evidence records two live
+artifact round trips, one small-model inference run, and eight OCR attempts
+(four successful comparisons and four failures). These are self-run workloads.
+Read `docs/gate1-assumptions.md` for the evidence boundaries before contributing.
 
 ## Getting started
 
@@ -14,19 +14,23 @@ git clone https://github.com/apsarthsumit/nosana-adapter-foundry.git
 cd nosana-adapter-foundry
 npm install
 npm test
-npm run gate1:validate-job
 npm run gate1:simulate
+npm run website:check
+node scripts/import-ocr-history.mjs --check
 ```
 
-All four commands should succeed before you start making changes, and again
-before you open a pull request.
+These offline checks should pass before opening a pull request. The separate
+`npm run gate1:validate-job` command checks the old static template's syntax
+with the Nosana CLI; that template still needs a published image digest and
+is not the definition used by the successful live runner.
 
 ## What to work on
 
-Check `docs/nosana-cli-findings.md` first. It lists the confirmed blockers in
-the installed Nosana CLI, including the artifact-egress limitation that
-currently prevents Gate 1 from running live. Fixes or workarounds for that
-blocker are the highest-value contribution right now.
+Check `docs/nosana-cli-findings.md` for the historical CLI investigation.
+Live artifact retrieval uses a job-served HTTP endpoint. Confirmation of the
+recommended supported egress mechanism, immutable runtime packaging, operational
+limits and reliable failure recovery remain open work. Read-only API access
+must work before any authorized paid experiment.
 
 Smaller, welcome contributions:
 
@@ -42,8 +46,8 @@ Smaller, welcome contributions:
 1. **Never commit a wallet file, private key, seed phrase, API token, or
    `.env` file.** Nosana job definitions are public by default. Nothing
    sensitive may appear in `src/nosana/job-definitions/`, in test fixtures,
-   or in any file tracked by git. Run `npm run gate1:validate-job` and the
-   test suite before committing; the secret linter in
+   or in any file tracked by git. Run the offline checks above and inspect
+   generated job definitions before committing; the secret linter in
    `src/security/secret-lint.ts` is exercised by both.
 2. **Never claim a live Nosana result that did not happen.** Evidence
    records produced in `--simulate` mode must keep

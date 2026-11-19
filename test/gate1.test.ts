@@ -204,6 +204,18 @@ test("a fully verified live evidence record can pass", () => {
   assert.doesNotThrow(() => validateEvidence(validLiveEvidenceFixture()));
 });
 
+test("live evidence cannot pass without independent provider, result and consistent timing", () => {
+  for (const field of ["market", "node", "ipfsResult", "timeStart", "timeEnd", "priceRaw"] as const) {
+    const evidence = validLiveEvidenceFixture();
+    evidence.independentJobState![field] = null;
+    assert.throws(() => validateEvidence(evidence), /gatePassed contradicts evidence/);
+  }
+  const missingIdentity = validLiveEvidenceFixture(); missingIdentity.market = null;
+  assert.throws(() => validateEvidence(missingIdentity), /gatePassed contradicts evidence/);
+  const wrongEnd = validLiveEvidenceFixture(); wrongEnd.independentJobState!.timeEnd = 61;
+  assert.throws(() => validateEvidence(wrongEnd), /gatePassed contradicts evidence/);
+});
+
 test("hashMatch false can never produce gatePassed true", () => {
   const evidence = validLiveEvidenceFixture();
   evidence.artifactActualSha256 = "b".repeat(64);

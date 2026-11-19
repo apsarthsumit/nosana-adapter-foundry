@@ -1,5 +1,22 @@
 # Gate 1 assumptions and evidence boundaries
 
+## Current evidence inventory (reviewed 19 November 2026)
+
+- MEASURED from `evidence/gate1-live-*.json`: two artifact round trips passed,
+  one verified by hand and one by the live runner. Retrieval used a file server
+  inside the job while it was running. Persistence after shutdown is unverified.
+- MEASURED from `evidence/inference-live-*.json`: one pinned small model ran and
+  its retrieved bytes matched the container-reported digest. This is transfer
+  integrity, not output correctness or independently attested model execution.
+- MEASURED from `evidence/ocr-sources/` and `evidence/ocr-daily/`: one manual OCR
+  run plus seven scheduled attempts yielded four successes and four failures.
+  `node scripts/import-ocr-history.mjs --check` checks the offline projection.
+  Runtime GPU names come from the logs; current host metadata can differ.
+- MEASURED from the November review: local API requests returned HTTP 401.
+  Current credits and the reason for the authorization failure remain unknown.
+- Gate validation checks consistency and required fields. An evidence JSON file
+  is not an attestation: independently fetching its public source is still needed.
+
 ## Verified from installed source (read-only investigation, see docs/nosana-cli-findings.md)
 
 - Job definitions use version `0.1`, type `container`, and `container/run` operations
@@ -21,14 +38,13 @@
   (`.conflicts('file')`, VERIFIED_FROM_FILES, `cli/job/post/command.js:27`).
 - The job definition passes `nosana job validate` using CLI 1.0.133 (VERIFIED_BY_COMMAND).
 
-## Not yet verified live
+## Open integration questions
 
-- The current market address and cost ceiling (the dry-run cost formula is verified
-  from source; the actual numbers it should be fed are not).
-- Whether a 10 MiB artifact completes and remains retrievable after the host finishes.
-- Whether any mechanism other than the dead `nosana-node-helper artifact-uploader`
-  path (`cli/job/post/action.js:91-113`, unreachable in 1.0.133) can get a file out
-  of `/nosana/outputs` or any other in-container path at all.
+- Current market availability, prices and a live enforced cost ceiling.
+- Whether artifacts remain retrievable after the host finishes; the current
+  workaround downloads files before stopping the deployment.
+- Nosana's recommended artifact-egress mechanism. The job-served endpoint worked
+  for saved runs but is not confirmed as the supported mechanism.
 - Whether a newer `@nosana/cli` release implements `--output`.
 
 ## Retracted / superseded assumptions

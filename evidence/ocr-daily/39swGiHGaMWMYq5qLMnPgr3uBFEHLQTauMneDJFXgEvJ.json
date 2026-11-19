@@ -1,0 +1,331 @@
+{
+ "deployment": "6j9Qw7hApB5DjAJndRY2UGWsNYJXFrkJptGkrc9zsQz9",
+ "schemaVersion": "ocr-evidence@1",
+ "executionMode": "nosana-live",
+ "jobId": "39swGiHGaMWMYq5qLMnPgr3uBFEHLQTauMneDJFXgEvJ",
+ "node": "38yH7ChdmMZJrC7TjL7WfZsVyj7cJ5iYiuLwidJnXx8J",
+ "timeStart": 1792386601,
+ "timeEnd": 1792388493,
+ "wallSeconds": 1892,
+ "jobStatus": "success",
+ "outcome": "result",
+ "infrastructureError": null,
+ "validationError": null,
+ "summary": {
+  "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.91.07",
+  "results": [
+   {
+    "avg_completion_tokens": 1477.5,
+    "batch8_wall_s": 68.7,
+    "mean_f1_all": 0.7984,
+    "mean_f1_clean": 0.8367,
+    "mean_f1_degraded": 0.7601,
+    "model": "nanonets/Nanonets-OCR2-1.5B-exp",
+    "pages": 22,
+    "pages_per_hour": 1152,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9273,
+      "tokens": 744
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9704,
+      "tokens": 855
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.9235,
+      "tokens": 464
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.0431,
+      "tokens": 4096
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.9173,
+      "tokens": 822
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8953,
+      "tokens": 1017
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.9779,
+      "tokens": 848
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.8274,
+      "tokens": 1553
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.8611,
+      "tokens": 868
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.9816,
+      "tokens": 376
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.9605,
+      "tokens": 771
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.974,
+      "tokens": 809
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9736,
+      "tokens": 799
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.97,
+      "tokens": 1158
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.0826,
+      "tokens": 4096
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.8304,
+      "tokens": 1879
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.8936,
+      "tokens": 942
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9065,
+      "tokens": 1292
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.8994,
+      "tokens": 1387
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.1192,
+      "tokens": 4096
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.7865,
+      "tokens": 1531
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.843,
+      "tokens": 2102
+     }
+    ],
+    "revision": "49a96f20ac641c7b3ad811914968ea8e1ace1760",
+    "runaway_pages": 3,
+    "server_start_s": 790.9
+   },
+   {
+    "avg_completion_tokens": 1203.3636,
+    "batch8_wall_s": 117.7,
+    "mean_f1_all": 0.8496,
+    "mean_f1_clean": 0.8743,
+    "mean_f1_degraded": 0.8248,
+    "model": "nanonets/Nanonets-OCR2-3B",
+    "pages": 22,
+    "pages_per_hour": 673,
+    "per_page": [
+     {
+      "degraded": false,
+      "doc": "attention-p1",
+      "f1": 0.9954,
+      "tokens": 653
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p2",
+      "f1": 0.9758,
+      "tokens": 850
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p3",
+      "f1": 0.7325,
+      "tokens": 902
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p4",
+      "f1": 0.82,
+      "tokens": 830
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p5",
+      "f1": 0.914,
+      "tokens": 830
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p6",
+      "f1": 0.8679,
+      "tokens": 898
+     },
+     {
+      "degraded": false,
+      "doc": "attention-p7",
+      "f1": 0.984,
+      "tokens": 826
+     },
+     {
+      "degraded": true,
+      "doc": "attention-p8",
+      "f1": 0.7974,
+      "tokens": 1541
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p1",
+      "f1": 0.9597,
+      "tokens": 570
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p2",
+      "f1": 0.5649,
+      "tokens": 1143
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p3",
+      "f1": 0.7529,
+      "tokens": 1518
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p4",
+      "f1": 0.8524,
+      "tokens": 1069
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p5",
+      "f1": 0.9326,
+      "tokens": 959
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p6",
+      "f1": 0.9711,
+      "tokens": 1154
+     },
+     {
+      "degraded": false,
+      "doc": "gpt3-p7",
+      "f1": 0.7481,
+      "tokens": 981
+     },
+     {
+      "degraded": true,
+      "doc": "gpt3-p8",
+      "f1": 0.8489,
+      "tokens": 1786
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p1",
+      "f1": 0.9018,
+      "tokens": 1055
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p2",
+      "f1": 0.9301,
+      "tokens": 1244
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p3",
+      "f1": 0.922,
+      "tokens": 1277
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p4",
+      "f1": 0.6241,
+      "tokens": 2562
+     },
+     {
+      "degraded": false,
+      "doc": "resnet-p5",
+      "f1": 0.7747,
+      "tokens": 2013
+     },
+     {
+      "degraded": true,
+      "doc": "resnet-p6",
+      "f1": 0.8198,
+      "tokens": 1813
+     }
+    ],
+    "revision": "c3886ff00bb037ce7da24988c9eafaf1fe2bed72",
+    "runaway_pages": 0,
+    "server_start_s": 763.7
+   }
+  ],
+  "scoring": "word F1 vs PDF text layer (proxy)",
+  "sources": [
+   "https://arxiv.org/pdf/1706.03762v7",
+   "https://arxiv.org/pdf/2005.14165v4",
+   "https://arxiv.org/pdf/1512.03385v1"
+  ],
+  "total_seconds": 1853,
+  "utc_start": "2026-10-19T05:10:22Z"
+ },
+ "provenance": {
+  "url": "https://explore.nosana.com/jobs/39swGiHGaMWMYq5qLMnPgr3uBFEHLQTauMneDJFXgEvJ",
+  "observedOn": "2026-11-18",
+  "importedOn": "2026-11-19",
+  "overviewSha256": "6f92557c3c1b990a9b5b35548f388afb2306af46c658f1aa878891ea58a0a700",
+  "resultsSnapshotSha256": "36db1bc089d15a3946aaaeb246e6a5c9c768832ac217c3367a2003f2f5c59a2a",
+  "timingBasis": "explorer displayed start and duration; second-level rounding may differ from chain timestamps",
+  "method": "archived-public-explorer-result-logs",
+  "runtimeLogSha256": "0034d5962b7f62e6f55bc9542ff17f975ddf8c175db64434fe9f89a79f57873c"
+ }
+}

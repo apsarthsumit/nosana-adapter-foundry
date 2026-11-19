@@ -32,4 +32,8 @@ test("the evidence summary is built from real files and counts match the reposit
   assert.ok(s.testCount >= 50);
   assert.ok(s.gate1Live.length >= 2 && s.gate1Live.every((g) => g.hashMatch === true && g.gatePassed === true));
   assert.equal(s.ocrDaily.total, s.ocrDaily.results + s.ocrDaily.benchmarkFailed + s.ocrDaily.noResult);
+  assert.equal(s.ocrDaily.total, 8);
+  assert.equal(s.ocrDaily.results, 4);
+  assert.equal(s.ocrDaily.benchmarkFailed, 4);
+  assert.ok(s.ocrDaily.runs.filter((r) => r.outcome === "failed").every((r) => r.infrastructureError || r.validationError));
 });

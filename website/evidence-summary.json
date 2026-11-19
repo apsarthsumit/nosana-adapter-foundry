@@ -1,5 +1,5 @@
 {
- "testCount": 54,
+ "testCount": 60,
  "gate1Live": [
   {
    "jobId": "4XeB5wfhEPicUG2ZusKDhmUupntAqrfN2t51b4GGoCgx",
@@ -29,9 +29,9 @@
   }
  ],
  "ocrDaily": {
-  "total": 1,
-  "results": 1,
-  "benchmarkFailed": 0,
+  "total": 8,
+  "results": 4,
+  "benchmarkFailed": 4,
   "noResult": 0,
   "runs": [
    {
@@ -42,7 +42,93 @@
     "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.99.02",
     "f1Ocr15b": 0.8353,
     "f1Ocr3b": 0.8486,
-    "infrastructureError": null
+    "infrastructureError": null,
+    "validationError": null,
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "AsW4VbKsTR3CopKUY7YLbdWgFRAUeVq3k791kMyQ3qsx",
+    "startedAt": "2026-10-16T05:10:01Z",
+    "outcome": "failed",
+    "wallSeconds": 77,
+    "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.91.07",
+    "f1Ocr15b": null,
+    "f1Ocr3b": null,
+    "infrastructureError": "server did not start: e 935, in _load_unlocked\n File \"<frozen importlib._bootstrap_external>\", line 995, in exec_module\n File \"<frozen importlib._bootstrap_external>\", line 1128, in get_code\n File \"<frozen importlib._bootstrap_external>\", line 757, in _compile_bytecode\nValueError: bad marshal data (",
+    "validationError": "job or benchmark operation failed",
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "5BnRzqD5oenNfc6JFTijU41mfMV8JyS28WgTobJ7FYkq",
+    "startedAt": "2026-10-17T05:10:01Z",
+    "outcome": "result",
+    "wallSeconds": 578,
+    "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 580.82.09",
+    "f1Ocr15b": 0.8352,
+    "f1Ocr3b": 0.8607,
+    "infrastructureError": null,
+    "validationError": null,
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "3SZSEF1fKYGKztTWp4ia5TEHCcbVACxKYPijoRwpr1nm",
+    "startedAt": "2026-10-18T05:10:00Z",
+    "outcome": "failed",
+    "wallSeconds": 782,
+    "gpu": null,
+    "f1Ocr15b": null,
+    "f1Ocr3b": null,
+    "infrastructureError": "- Job failed with status 'init error'",
+    "validationError": "job or benchmark operation failed",
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "39swGiHGaMWMYq5qLMnPgr3uBFEHLQTauMneDJFXgEvJ",
+    "startedAt": "2026-10-19T05:10:01Z",
+    "outcome": "result",
+    "wallSeconds": 1892,
+    "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 595.91.07",
+    "f1Ocr15b": 0.7984,
+    "f1Ocr3b": 0.8496,
+    "infrastructureError": null,
+    "validationError": null,
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "83zQtrGHMvBzNjWhEotGYYYy5gMBgyNRdpG1qxnqt94E",
+    "startedAt": "2026-10-20T05:10:01Z",
+    "outcome": "result",
+    "wallSeconds": 798,
+    "gpu": "NVIDIA GeForce RTX 3090, 24576 MiB, 570.172.08",
+    "f1Ocr15b": 0.8354,
+    "f1Ocr3b": 0.8562,
+    "infrastructureError": null,
+    "validationError": null,
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "351uG3pH8QZ2DLv9JQN32M5a4ZiiyHWDbhLHp6NehRz9",
+    "startedAt": "2026-10-21T05:10:10Z",
+    "outcome": "failed",
+    "wallSeconds": 2540,
+    "gpu": null,
+    "f1Ocr15b": null,
+    "f1Ocr3b": null,
+    "infrastructureError": "- Job failed with status 'init error'",
+    "validationError": "job or benchmark operation failed",
+    "source": "archived-public-explorer-result-logs"
+   },
+   {
+    "jobId": "7DzA6Dr7rFvtbMAkX6GdegGFaxfcrbxEyeZkLsC3KNfg",
+    "startedAt": "2026-10-22T08:23:41Z",
+    "outcome": "failed",
+    "wallSeconds": 1812,
+    "gpu": null,
+    "f1Ocr15b": null,
+    "f1Ocr3b": null,
+    "infrastructureError": "- Job failed with status 'init error'",
+    "validationError": "job or benchmark operation failed",
+    "source": "archived-public-explorer-result-logs"
    }
   ]
  }
