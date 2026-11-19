@@ -11,7 +11,7 @@ Exactly one machine-readable line is printed at the end:
   OCR_DAILY_FAILED {json}      if any model could not be served or scored
 The process exits non-zero in the failed case so the Nosana job shows as failed.
 """
-import base64, collections, concurrent.futures as cf, io, json, os, re, subprocess, sys, time, urllib.request
+import base64, collections, concurrent.futures as cf, importlib.metadata, io, json, os, platform, re, subprocess, sys, time, urllib.request
 
 LOCAL_MOCK = os.environ.get("LOCAL_MOCK") == "1"  # offline logic check: "OCR" returns the truth text
 
@@ -106,6 +106,7 @@ def start_server(model, revision):
             pass
         time.sleep(3)
     p.kill()
+    p.wait(timeout=30)
     return None, 0.0, "vllm did not become ready in 900 s: " + open("/tmp/vllm.log").read()[-800:]
 
 
@@ -116,13 +117,14 @@ def stop_server(p):
             p.wait(timeout=60)
         except Exception:
             p.kill()
+            p.wait(timeout=30)
         time.sleep(8)
 
 
 def run_model(model, revision, pages):
     p, up, err = None, 0.0, ""
     if not LOCAL_MOCK:
-        for attempt in (1, 2):  # nodes fail randomly; one retry is cheap
+        for attempt in (1, 2):  # bounded retries; reliability and cost remain unmeasured
             p, up, err = start_server(model, revision)
             if p:
                 break
@@ -158,7 +160,13 @@ def main():
     pages = build_pages()
     print("PAGES", len(pages), "degraded", sum(p["degraded"] for p in pages), flush=True)
     results = [run_model(m, rev, pages) for m, rev in MODELS]
-    summary = {"utc_start": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t_all)), "gpu": gpu, "total_seconds": round(time.time() - t_all),
+    runtime = {"python": platform.python_version()}
+    for package in ("vllm", "torch", "transformers", "PyMuPDF", "Pillow", "requests"):
+        try:
+            runtime[package] = importlib.metadata.version(package)
+        except importlib.metadata.PackageNotFoundError:
+            runtime[package] = "not-installed"
+    summary = {"utc_start": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t_all)), "gpu": gpu, "total_seconds": round(time.time() - t_all), "runtime": runtime,
                "sources": [u for _, u, _ in SOURCES], "scoring": "word F1 vs PDF text layer (proxy)", "results": results}
     failed = [r for r in results if "error" in r]
     print(("OCR_DAILY_FAILED " if failed else "OCR_DAILY_RESULT ") + json.dumps(summary, sort_keys=True), flush=True)

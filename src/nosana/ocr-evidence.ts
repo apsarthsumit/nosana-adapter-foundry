@@ -50,8 +50,14 @@ export function validateOcrSummary(summary: unknown): string | null {
     if (result.pages !== OCR_PAGE_COUNT || !Array.isArray(result.per_page) || result.per_page.length !== OCR_PAGE_COUNT) return "page count does not match";
     if (![result.mean_f1_all, result.mean_f1_clean, result.mean_f1_degraded].every(score)) return "model scores are invalid";
     if (!result.per_page.every((p: unknown, i: number) => object(p) && p.doc === expectedPages[i] && p.degraded === (i % 2 === 1) && score(p.f1) && Number.isSafeInteger(p.tokens) && p.tokens >= 0)) return "per-page results are invalid";
-    const mean = result.per_page.reduce((n: number, p: any) => n + p.f1, 0) / OCR_PAGE_COUNT;
-    if (Math.abs(mean - result.mean_f1_all) > 0.0002) return "aggregate score contradicts page scores";
+    for (const [field, pages] of [
+      ["mean_f1_all", result.per_page],
+      ["mean_f1_clean", result.per_page.filter((p: any) => !p.degraded)],
+      ["mean_f1_degraded", result.per_page.filter((p: any) => p.degraded)],
+    ] as const) {
+      const mean = pages.reduce((n: number, p: any) => n + p.f1, 0) / pages.length;
+      if (Math.abs(mean - result[field]) > 0.0002) return "aggregate score contradicts page scores";
+    }
   }
   return null;
 }

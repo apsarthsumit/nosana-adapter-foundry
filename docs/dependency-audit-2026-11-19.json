@@ -1,0 +1,439 @@
+{
+  "date": "2026-11-19",
+  "command": "npm audit --json",
+  "fullReportSha256": "2a738371b8d639cdfc0bfcee0d33ea527051ffd48e7aeb6dc73faff14e4686d8",
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 8,
+      "moderate": 20,
+      "high": 35,
+      "critical": 6,
+      "total": 69
+    },
+    "dependencies": {
+      "prod": 348,
+      "dev": 680,
+      "optional": 9,
+      "peer": 4,
+      "peerOptional": 0,
+      "total": 1027
+    }
+  },
+  "affectedPackages": [
+    {
+      "name": "@babel/runtime",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@coral-xyz/anchor",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@coral-xyz/borsh",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@inquirer/editor",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@inquirer/prompts",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@metaplex-foundation/umi-bundle-defaults",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@metaplex-foundation/umi-eddsa-web3js",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@metaplex-foundation/umi-rpc-web3js",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@metaplex-foundation/umi-transaction-factory-web3js",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@metaplex-foundation/umi-web3js-adapters",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@nosana/cli",
+      "severity": "high",
+      "isDirect": true,
+      "fixAvailable": false
+    },
+    {
+      "name": "@nosana/sdk",
+      "severity": "high",
+      "isDirect": true,
+      "fixAvailable": false
+    },
+    {
+      "name": "@solana/buffer-layout-utils",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@solana/spl-token",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@solana/spl-token-metadata",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@solana/web3.js",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "@vitest/coverage-v8",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "@vitest/mocker",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "ajv",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "axios",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "base-x",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "bigint-buffer",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "bn.js",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "body-parser",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "brace-expansion",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "cookie",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "cross-spawn",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "defu",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "diff",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "dockerode",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "engine.io-client",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "express",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "external-editor",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "figlet",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "flatted",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "follow-redirects",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "form-data",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "inquirer",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "jayson",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "js-yaml",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "lodash",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "micromatch",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "minimatch",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "nanoid",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "path-to-regexp",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "picomatch",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "postcss",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "proxy-addr",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "qs",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "rollup",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "rpc-websockets",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "send",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "serve-static",
+      "severity": "low",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "shell-quote",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "socket.io-client",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "socket.io-parser",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "source-map-js",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "stream-json",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "tar",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "tar-fs",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "tmp",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "toml",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "undici",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "uuid",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": false
+    },
+    {
+      "name": "vite",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "vitest",
+      "severity": "critical",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "ws",
+      "severity": "high",
+      "isDirect": false,
+      "fixAvailable": true
+    },
+    {
+      "name": "yaml",
+      "severity": "moderate",
+      "isDirect": false,
+      "fixAvailable": true
+    }
+  ]
+}

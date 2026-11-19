@@ -17,6 +17,8 @@ export const OCR_OP_ID = OCR_OPERATION_ID;
 export const OCR_SCRIPT_PATH = resolve(import.meta.dirname, "../../containers/ocr-benchmark/bench.py");
 /** Hard cap inside the container so a hung model server cannot burn the whole job timeout. */
 export const OCR_SCRIPT_TIMEOUT_SECONDS = 2400;
+export const OCR_SETUP_TIMEOUT_SECONDS = 300;
+export const OCR_PYTHON_REQUIREMENTS = ["PyMuPDF==1.26.4", "Pillow==11.3.0", "requests==2.32.5"];
 const MIN_CREDIT_TIMEOUT_MINUTES = 50;
 // Measured 2026-10-15: a deployment created with timeout 40 never received a node in 3 of 3
 // tries, while the same job at timeout 70 was assigned in ~30 s. Causality is unproven, so
@@ -27,14 +29,21 @@ export function readOcrScript(): string {
   return readFileSync(OCR_SCRIPT_PATH, "utf8");
 }
 
-export function buildOcrShell(script: string = readOcrScript()): string {
+export function buildOcrShell(script: string = readOcrScript(), options: { scriptPath?: string } = {}): string {
   if (lintSecrets(script).length) throw new Error("OCR source failed secret lint before encoding");
   const b64 = Buffer.from(script, "utf8").toString("base64");
+  const scriptPath = options.scriptPath ? "'" + options.scriptPath.replaceAll("'", "'\\''") + "'" : "/tmp/bench.py";
   return [
-    "set -uo pipefail",
-    "python3 -m pip install -q pymupdf pillow requests 2>&1 | tail -2 || exit $?",
-    `echo ${b64} | base64 -d > /tmp/bench.py`,
-    `timeout ${OCR_SCRIPT_TIMEOUT_SECONDS} python3 /tmp/bench.py`,
+    "set -euo pipefail",
+    // A fresh cache prefix avoids reading pre-existing .pyc files. It does not
+    // establish that the underlying image or installed packages are healthy.
+    'PYTHONPYCACHEPREFIX="$(mktemp -d /tmp/ocr-pycache.XXXXXX)"',
+    "export PYTHONPYCACHEPREFIX",
+    `timeout ${OCR_SETUP_TIMEOUT_SECONDS} python3 -m pip install --disable-pip-version-check --no-cache-dir -q ${OCR_PYTHON_REQUIREMENTS.join(" ")} 2>&1 | tail -20`,
+    `echo ${b64} | base64 -d > ${scriptPath}`,
+    // Capture a benchmark failure explicitly; setup failures above stop immediately.
+    "set +e",
+    `timeout ${OCR_SCRIPT_TIMEOUT_SECONDS} python3 ${scriptPath}`,
     "rc=$?",
     'echo "EXIT_CODE $rc"',
     "exit $rc",
@@ -50,6 +59,7 @@ export interface OcrBodyInput {
 }
 
 export function buildOcrDeploymentBody(input: OcrBodyInput) {
+  if (!Number.isSafeInteger(input.timeoutMinutes)) throw new Error("timeoutMinutes must be a finite integer");
   if (input.timeoutMinutes < MIN_CREDIT_TIMEOUT_MINUTES) throw new Error(`timeoutMinutes must be at least ${MIN_CREDIT_TIMEOUT_MINUTES} for credit-paid jobs`);
   if (input.timeoutMinutes < MIN_SAFE_TIMEOUT_MINUTES) throw new Error(`timeoutMinutes must be at least ${MIN_SAFE_TIMEOUT_MINUTES}: shorter deployments went unassigned in testing`);
   const scheduled = input.schedule !== undefined;

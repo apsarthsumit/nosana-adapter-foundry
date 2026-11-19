@@ -1,6 +1,10 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { execFileSync, spawnSync } from "node:child_process";
 import { lintSecrets } from "../src/security/secret-lint.ts";
 import { OCR_IMAGE, OCR_SCRIPT_PATH, buildOcrDeploymentBody, buildOcrShell } from "../src/nosana/ocr-workload.ts";
 import { buildOcrEvidence, extractOcrSummary, validateOcrSummary } from "../src/nosana/ocr-evidence.ts";
@@ -39,12 +43,14 @@ test("the base64 payload in the job decodes to exactly containers/ocr-benchmark/
 });
 
 test("timeouts below the credit minimum or the observed-safe minimum are rejected", () => {
+  for (const value of [NaN, Infinity, 60.5]) assert.throws(() => buildOcrDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: value }), /finite integer/);
   assert.throws(() => buildOcrDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 30 }), /at least 50/);
   assert.throws(() => buildOcrDeploymentBody({ name: "n", market: MARKET, timeoutMinutes: 55 }), /at least 60/);
 });
 
 test("bench.py keeps its inputs pinned (versioned PDFs, 40-hex model revisions)", () => {
   const py = readFileSync(OCR_SCRIPT_PATH, "utf8");
+  execFileSync("python3", ["-I", "-c", 'import sys; compile(sys.stdin.read(), "ocr-benchmark", "exec")'], { input: py });
   for (const m of py.matchAll(/https:\/\/arxiv\.org\/pdf\/[0-9.]+(v\d+)?"/g)) assert.ok(m[1], `unversioned arXiv URL: ${m[0]}`);
   const revisions = [...py.matchAll(/"([0-9a-f]{40})"/g)];
   assert.equal(revisions.length, 2);
@@ -99,6 +105,8 @@ test("OCR cannot accept empty, mock, wrong-revision, malformed or contradictory 
     (s: any) => { s.results[0].pages = 21; },
     (s: any) => { s.results[0].per_page[0].doc = "wrong-page"; },
     (s: any) => { s.results[0].mean_f1_all = 0; },
+    (s: any) => { s.results[0].mean_f1_clean = 0; },
+    (s: any) => { s.results[0].mean_f1_degraded = 0; },
     (s: any) => { s.results[0].mean_f1_all = NaN; },
     (s: any) => { s.sources = ["https://example.test/unpinned"]; },
   ];
@@ -107,6 +115,20 @@ test("OCR cannot accept empty, mock, wrong-revision, malformed or contradictory 
     assert.ok(validateOcrSummary(summary));
     assert.notEqual(extractOcrSummary(detail([`OCR_DAILY_RESULT ${JSON.stringify(summary)}`])).outcome, "result");
   }
+});
+
+test("OCR startup preserves install, timeout, decode and benchmark failures without continuing", async () => {
+  const dir = await mkdtemp(join(tmpdir(), "ocr-shell-"));
+  try {
+    for (const [pipCode, decodeCode, modelCode, expected] of [[12, 0, 0, 12], [124, 0, 0, 124], [0, 19, 0, 19], [0, 0, 17, 17], [0, 0, 0, 0]]) {
+      const stubs = `mktemp(){ echo '${dir}/cache'; }; timeout(){ echo "LIMIT $1"; shift; "$@"; }; python3(){ if [ "$1" = "-m" ]; then return ${pipCode}; fi; echo BENCHMARK_RAN; return ${modelCode}; }; base64(){ if [ ${decodeCode} -ne 0 ]; then return ${decodeCode}; fi; command base64 "$@"; };\n`;
+      const run = spawnSync("bash", ["-c", stubs + buildOcrShell("print('fixture')", { scriptPath: join(dir, "bench.py") })], { encoding: "utf8", timeout: 5000 });
+      assert.equal(run.status, expected, run.stderr);
+      assert.match(run.stdout, /LIMIT 300/);
+      if (pipCode || decodeCode) assert.doesNotMatch(run.stdout, /BENCHMARK_RAN/);
+      else { assert.match(run.stdout, /LIMIT 2400/); assert.match(run.stdout, new RegExp(`EXIT_CODE ${modelCode}`)); }
+    }
+  } finally { await rm(dir, { recursive: true, force: true }); }
 });
 
 test("OCR success requires the expected successful operation, terminal job and live identity", () => {
