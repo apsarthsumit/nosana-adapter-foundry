@@ -51,8 +51,8 @@ structurally impossible outside a live, independently verified run. See
 | Evidence schema (simulation vs. live) | Implemented, tested locally |
 | Secret linter for job definitions | Implemented, tested locally |
 | Job definition | Passes `nosana job validate` |
-| Live job submission (Nosana deployments API) | Implemented, run live once per workload |
-| Artifact retrieval from a completed job | Works via an HTTP endpoint the job itself serves (not via the CLI; see below) |
+| Live job submission (Nosana deployments API) | Historical artifact, inference and OCR runs recorded in `evidence/`; current API access returns HTTP 401 |
+| Artifact retrieval before stopping the job | Works via an HTTP endpoint the job itself serves; persistence after shutdown remains unverified |
 | Independent on-chain job state | Implemented via `@nosana/sdk`, run live |
 | Real-model inference adapter | One small model, run live once; no scale or reproducibility testing yet |
 | Daily OCR benchmark (`containers/ocr-benchmark/`) | MEASURED — one manual result and seven scheduled attempts, including three results and four failures; see `evidence/ocr-daily/`. The last dashboard check on November 18 showed a stopped/error schedule and insufficient credits. |
