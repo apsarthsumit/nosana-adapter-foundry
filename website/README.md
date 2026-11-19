@@ -12,10 +12,10 @@ python3 -m http.server 4173 --directory website
 
 ## Vercel
 
-Deployed as its own Vercel project, `nosana-adapter-foundry`, with **Root
-Directory** set to `website` and the **Other** framework preset. No build
-command or environment variables are required. This project is separate from
-any other Vercel project in the same account; deploying it does not affect
-them.
+MEASURED — `vercel project inspect nosana-adapter-foundry` on 19 November 2026
+reported Root Directory `.` and framework preset `Other`. The approved release
+was uploaded from this `website/` directory. Automatic publishing from GitHub
+has not been established; a GitHub push alone did not update the public site.
+Production publication requires the owner's approval.
 
 `GITHUB_URL` in `app.js` already points at the public repository.

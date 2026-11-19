@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Nosana Adapter Foundry is an open-source verification layer for reproducible AI workloads on decentralized GPU infrastructure." />
+    <meta name="description" content="Nosana Adapter Foundry: artifact retrieval, small-model inference and OCR experiments on Nosana, with public results and failures." />
     <meta property="og:title" content="Nosana Adapter Foundry" />
-    <meta property="og:description" content="Verified, reproducible AI workloads for decentralized GPU infrastructure." />
+    <meta property="og:description" content="Artifact retrieval, inference and OCR experiments on Nosana. Public results include successful runs and failures." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://nosana-adapter-foundry.vercel.app/" />
     <meta property="og:image" content="https://nosana-adapter-foundry.vercel.app/og.png" />
@@ -14,7 +14,7 @@
     <meta property="og:image:alt" content="Nosana Adapter Foundry: deterministic verification for AI workloads on decentralized GPUs" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Nosana Adapter Foundry" />
-    <meta name="twitter:description" content="Verified, reproducible AI workloads for decentralized GPU infrastructure." />
+    <meta name="twitter:description" content="Artifact retrieval, inference and OCR experiments on Nosana. Public results include successful runs and failures." />
     <meta name="twitter:image" content="https://nosana-adapter-foundry.vercel.app/og.png" />
     <meta name="theme-color" content="#07110d" />
     <title>Nosana Adapter Foundry</title>
@@ -46,11 +46,11 @@
       <section class="hero shell">
         <div class="hero-copy">
           <div class="status-row">
-            <p class="eyebrow"><span></span> Nosana grant proposal</p>
+            <p class="eyebrow"><span></span> Nosana Build Log · November 2026</p>
             <p class="status-chip">60 AUTOMATED TESTS PASSING</p>
           </div>
-          <h1>AI workloads that<br /><em>prove what happened.</em></h1>
-          <p class="lede">Package, run, retrieve, and independently verify AI workloads across decentralized GPU providers. No hand-waving. No simulation presented as production.</p>
+          <h1>Run on Nosana.<br /><em>Keep the results.</em></h1>
+          <p class="lede">An open-source prototype for submitting Nosana jobs, checking downloaded artifacts, and recording OCR results and failures.</p>
           <aside class="hero-status" aria-label="Current prototype status">
             <strong>PROTOTYPE STATUS: SELF-RUN</strong>
             <span>Gate 1 has passed twice on live Nosana and a small open model has run end to end. OCR history from 15 to 22 Oct 2026 contains four successful comparisons and four failed attempts. The schedule was in an error state when checked on 18 Nov; recent events reported insufficient credits. All usage so far is our own, not customer traffic, and nothing here is a production workload yet.</span>
@@ -83,7 +83,7 @@
 
       <section class="section shell inspector-section" id="inspector">
         <div class="section-heading row-heading">
-          <div><p class="section-tag">DETERMINISM INSPECTOR</p><h2>Change one byte.<br />Watch the proof change.</h2></div>
+          <div><p class="section-tag">BROWSER HASH DEMO</p><h2>Change the input.<br />Compare the hash.</h2></div>
           <p>This browser demonstration computes a real SHA-256 digest locally. It demonstrates deterministic hashing only. It does not execute a Nosana job.</p>
         </div>
         <div class="inspector">
@@ -123,19 +123,19 @@
           <h2>“Container exited” is not the same as “workload succeeded.”</h2>
         </div>
         <div class="problem-copy">
-          <p>Distributed compute introduces boundaries that ordinary success logs cannot verify. Did the intended workload execute? Did its output survive retrieval? Can another developer reproduce it?</p>
-          <p>Adapter Foundry turns those questions into explicit, testable gates.</p>
+          <p>Seven scheduled OCR jobs appeared as completed in the deployment history. Their public result logs showed three successful comparisons and four failures.</p>
+          <p>The collector checks the operation status and benchmark output before recording a successful result. The artifact runner separately compares downloaded bytes with a locally computed hash.</p>
         </div>
       </section>
 
       <section class="section shell" id="architecture">
         <div class="section-heading">
           <p class="section-tag">VERIFICATION PIPELINE</p>
-          <h2>Evidence at every boundary.</h2>
-          <p>A workload only advances when the previous claim has been measured.</p>
+          <h2>How the artifact runner works.</h2>
+          <p>The OCR benchmark uses result logs instead of this artifact-download path.</p>
         </div>
         <div class="pipeline">
-          <article class="pipeline-step" data-reveal><span>01</span><div class="icon">{ }</div><h3>Package</h3><p>Pin the workload, inputs, runtime, and expected output contract.</p></article>
+          <article class="pipeline-step" data-reveal><span>01</span><div class="icon">{ }</div><h3>Package</h3><p>Build a job that generates known bytes from a public seed. Full runtime pinning remains open.</p></article>
           <div class="connector">→</div>
           <article class="pipeline-step" data-reveal><span>02</span><div class="icon">GPU</div><h3>Execute</h3><p>Translate the workload into a Nosana-compatible GPU job.</p></article>
           <div class="connector">→</div>
@@ -164,8 +164,8 @@
       <section class="section dark-panel">
         <div class="shell honesty-grid">
           <div>
-            <p class="section-tag">HONEST BY DESIGN</p>
-            <h2>The prototype refuses to overclaim.</h2>
+            <p class="section-tag">SIMULATION CHECK</p>
+            <h2>A local hash match cannot pass the live gate.</h2>
           </div>
           <div class="evidence-card">
             <div class="evidence-line"><span>executionMode</span><code>"simulation"</code></div>
@@ -182,7 +182,7 @@
 
       <section class="section shell" id="roadmap">
         <div class="section-heading row-heading">
-          <div><p class="section-tag">GRANT ROADMAP</p><h2>From one proof to an ecosystem.</h2></div>
+          <div><p class="section-tag">ENGINEERING STATUS</p><h2>What works and what remains.</h2></div>
           <p>Five engineering stages describe the prototype and remaining work. These stages are not an awarded grant or a funding agreement.</p>
         </div>
         <ol class="roadmap">
@@ -197,8 +197,8 @@
       <section class="section team-section" id="team">
         <div class="shell">
           <div class="section-heading row-heading">
-            <div><p class="section-tag">TEAM AND DELIVERY</p><h2>Three accountable workstreams.</h2></div>
-            <p>Engineering delivery, security review, and automated quality gates have named owners.</p>
+            <div><p class="section-tag">TEAM</p><h2>Project roles.</h2></div>
+            <p>Roles listed in the original proposal. The public job records and tests document the work completed.</p>
           </div>
           <div class="team-grid">
             <article class="team-member" data-reveal>
@@ -217,15 +217,15 @@
               <p>Owns test planning, automated regression coverage, acceptance-gate validation, and reproducibility testing.</p>
             </article>
           </div>
-          <p class="team-operating-model"><strong>Operating model</strong> Each milestone passes through implementation, security review, and independently defined QA acceptance criteria before evidence is published.</p>
+          <p class="team-operating-model"><strong>Review status</strong> Automated tests and CI are public. This page does not establish that a separate security or QA review has been completed.</p>
         </div>
       </section>
 
       <section class="section shell" id="repository">
         <div class="cta-panel">
           <p class="section-tag">BUILD IN PUBLIC</p>
-          <h2>Make decentralized AI compute measurable.</h2>
-          <p>The prototype is an open-source reference implementation for the Nosana ecosystem, released under Apache-2.0.</p>
+          <h2>Read the code and run records.</h2>
+          <p>The prototype source, evidence files and tests are available under Apache-2.0.</p>
           <div class="hero-actions">
             <a class="button primary" data-github data-live-label="View source" href="#repository"><span class="link-label">View source</span><span class="link-arrow"></span></a>
             <a class="button quiet" href="mailto:satyawansinghinuk@gmail.com">Contact the team <span>↗</span></a>
@@ -236,7 +236,7 @@
 
     <footer class="shell">
       <div class="brand"><span class="brand-mark"><i></i><i></i><i></i></span><span>ADAPTER FOUNDRY</span></div>
-      <p>Built for reproducible AI workloads on decentralized GPU infrastructure.</p>
+      <p>Artifact retrieval, inference and OCR experiments on Nosana.</p>
       <p>Prototype · 2026</p>
     </footer>
     <script type="module" src="app.js"></script>

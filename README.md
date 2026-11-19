@@ -5,19 +5,14 @@
 
 Project website: https://nosana-adapter-foundry.vercel.app/
 
-Nosana Adapter Foundry is an open prototype for turning a small dataset into a
-verified, versioned training and inference workload on the Nosana GPU
-network. This repository contains Gate 1: a small, self-contained check of
-whether a deterministic artifact can survive a Nosana job round trip byte for
-byte, with an evidence record that distinguishes a real result from a
-rehearsal.
+Nosana Adapter Foundry is an open-source prototype with three Nosana workloads:
+a deterministic artifact round trip, small-model inference, and an OCR comparison.
+It records downloaded artifact hashes and benchmark outcomes, including failures.
+Fine-tuning is proposed work and has not been implemented.
 
 ## The problem
 
-Decentralized GPU networks remove a layer of infrastructure trust that
-centralized providers normally absorb. Before a training or inference
-pipeline is built on top of one, three questions need concrete answers, not
-assumptions:
+The prototype investigates three practical questions:
 
 - Does a submitted job actually complete and return usable output.
 - Can the resulting artifact be retrieved intact, with a hash to prove it.
